@@ -1,0 +1,380 @@
+{% extends "layout.html" %}
+
+{% block title %}Favorites{% endblock %}
+{% block main_class %}container{% endblock %}
+
+{% block page_style %}
+<style>
+  /* ==========================================================================
+     Design System & CSS Variables
+     ========================================================================== */
+  :root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-light: #eef2ff;
+    --bg-surface: #ffffff;
+    --bg-subtle: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ==========================================================================
+     Layout & Header
+     ========================================================================== */
+  .view-wrapper {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .page-header__content h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .page-header__content h2 svg {
+    stroke: var(--primary);
+  }
+
+  .page-header__content p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  /* ==========================================================================
+     Buttons
+     ========================================================================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  .btn--primary {
+    background-color: var(--primary);
+    color: #ffffff;
+  }
+
+  .btn--primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn--outline {
+    background-color: var(--bg-surface);
+    color: var(--text-main);
+    border-color: var(--border-color);
+  }
+
+  .btn--outline:hover {
+    background-color: var(--bg-subtle);
+    border-color: #cbd5e1;
+  }
+
+  /* ==========================================================================
+     Filter Panel
+     ========================================================================== */
+  .filter-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .filter-panel__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .field-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9rem;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    transition: var(--transition);
+    box-sizing: border-box;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  }
+
+  .filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  /* ==========================================================================
+     Metrics Bar
+     ========================================================================== */
+  .metrics-bar {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ==========================================================================
+     Clickable Cards Grid
+     ========================================================================== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .subject-card {
+    position: relative; /* Crucial for stretched link behavior */
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .subject-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .subject-card__badge {
+    align-self: flex-start;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-full);
+    background-color: var(--primary-light);
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+
+  .subject-card__title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.4;
+  }
+
+  .subject-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  /* Stretched link overlay trick */
+  .stretched-link::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .subject-card:hover .btn--outline {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+  }
+
+  /* ==========================================================================
+     Empty State
+     ========================================================================== */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-surface);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-muted);
+  }
+
+  .empty-state svg {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+  }
+
+  .empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-state p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="view-wrapper">
+
+  <header class="page-header">
+    <div class="page-header__content">
+      <h2>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        Favorites
+      </h2>
+      <p>Materials and subjects you've marked as favorites.</p>
+    </div>
+    <a href="{{ url_for('home') }}" class="btn btn--outline">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Back Home
+    </a>
+  </header>
+
+  <section class="filter-panel">
+    <div class="filter-panel__header">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      Search Parameters
+    </div>
+
+    <!-- Switched method to GET so URL parameters persist cleanly -->
+    <form method="get" action="{{ url_for('favorite_list') }}">
+      <div class="filter-grid">
+
+        <div class="field-group">
+          <label for="subject_name">Name</label>
+          <input
+            type="text"
+            id="subject_name"
+            name="name"
+            class="form-control"
+            placeholder="Search favorites..."
+            value="{{ request.args.get('name', '') }}">
+        </div>
+
+        <div class="field-group">
+          <label for="type_select">Type</label>
+          <select name="type" id="type_select" class="form-control">
+            <option value="">All types</option>
+            {% for t in ['material', 'subject'] %}
+              <option value="{{ t }}" {% if request.args.get('type') == t %}selected{% endif %}>
+                {{ t|capitalize }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+      </div>
+
+      <div class="filter-actions">
+        <a href="{{ url_for('favorite_list') }}" class="btn btn--outline">Clear Filters</a>
+        <button type="submit" class="btn btn--primary">Apply Search</button>
+      </div>
+    </form>
+  </section>
+
+  <div class="metrics-bar">
+    Showing {{ data|length }} matched record{{ '' if data|length == 1 else 's' }}
+  </div>
+
+ {% if data %}
+  <div class="cards-grid">
+    {% for item in data %}
+      <article class="subject-card">
+        <div class="subject-card__badge">{{ item.type|capitalize }}</div>
+
+        <div class="subject-card__footer">
+          {% if item.type == 'material' %}
+            <form action="{{ url_for('material_search') }}" method="POST" class="stretched-link">
+              <input type="hidden" name="material_id" value="{{ item.id }}">
+              <input type="hidden" name="material_name" value="{{ item.name }}">
+              <button type="submit" class="btn btn--outline">View Details</button>
+            </form>
+          {% else %}
+            <a href="{{ url_for('subject_detail', subject_id=item.id) }}" class="btn btn--outline stretched-link">
+              View Details
+            </a>
+          {% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+{% endif %}
+
+</div>
+{% endblock %}

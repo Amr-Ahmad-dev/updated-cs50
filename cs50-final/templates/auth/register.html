@@ -1,0 +1,258 @@
+{% extends "layout.html" %}
+{% block title %}Create account — Ledger{% endblock %}
+
+{% block page_style %}
+<style>
+  /* Base Layout */
+  .auth-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 960px;
+    margin: 48px auto 0;
+    align-items: center;
+    padding: 0 20px;
+  }
+  @media (min-width: 820px) { 
+    .auth-shell { grid-template-columns: 1fr 1fr; gap: 72px; } 
+  }
+
+  /* Left Side: Typography & Info */
+  .auth-side h1 { 
+    font-size: 36px; 
+    font-weight: 600; 
+    line-height: 1.2; 
+    max-width: 18ch;
+    color: var(--ink, #0f172a);
+    margin-bottom: 16px;
+  }
+  .auth-side h1 em { 
+    font-style: normal; 
+    color: var(--accent, #2563eb); 
+  }
+  .auth-side p { 
+    color: var(--ink-soft, #64748b); 
+    font-size: 15px; 
+    line-height: 1.6;
+    margin-top: 0; 
+    max-width: 42ch; 
+  }
+
+  .side-points { 
+    margin-top: 40px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+  }
+  .side-point { 
+    display: flex; 
+    gap: 16px; 
+    align-items: flex-start; 
+  }
+  .side-point__mark {
+    flex: none; 
+    width: 24px; 
+    height: 24px; 
+    margin-top: 2px;
+    border-radius: 6px; 
+    background: var(--accent-soft, #eff6ff); 
+    color: var(--accent-strong, #1d4ed8);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-family: monospace; 
+    font-size: 12px; 
+    font-weight: 700;
+  }
+  .side-point__text { 
+    font-size: 14px; 
+    line-height: 1.5;
+    color: var(--ink-soft, #64748b); 
+  }
+  .side-point__text b { 
+    color: var(--ink, #0f172a); 
+    font-weight: 600; 
+  }
+
+  /* Right Side: Form Card */
+  .auth-card { 
+    background: #ffffff;
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 16px;
+    padding: 40px; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .record__tab {
+    display: inline-block;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent, #2563eb);
+    background: var(--accent-soft, #eff6ff);
+    padding: 6px 12px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+
+  .auth-card h2 { 
+    font-size: 24px; 
+    font-weight: 600;
+    margin: 0 0 8px 0; 
+    color: var(--ink, #0f172a);
+  }
+  .auth-card__sub { 
+    color: var(--ink-soft, #64748b); 
+    font-size: 14px; 
+    margin-bottom: 32px; 
+  }
+
+  /* Form Elements */
+  form { display: flex; flex-direction: column; gap: 20px; }
+  
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field label { 
+    font-size: 13.5px; 
+    font-weight: 600; 
+    color: var(--ink, #1e293b); 
+  }
+  
+  .field input, .field select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14.5px;
+    border: 1px solid var(--border, #cbd5e1);
+    border-radius: 8px;
+    background: #f8fafc;
+    color: var(--ink, #0f172a);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+  
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--accent, #2563eb);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+
+  .two-col { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 16px; 
+  }
+
+  /* Buttons & Footer */
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
+  .btn--primary {
+    background-color: var(--ink, #0f172a);
+    color: #ffffff;
+  }
+  .btn--primary:hover {
+    background-color: #334155;
+  }
+  .btn--block { 
+    width: 100%; 
+    margin-top: 12px; 
+  }
+
+  .auth-card__footer { 
+    margin-top: 28px; 
+    text-align: center; 
+    font-size: 14px; 
+    color: var(--ink-soft, #64748b); 
+  }
+  .auth-card__footer a { 
+    color: var(--accent, #2563eb); 
+    font-weight: 600; 
+    text-decoration: none;
+  }
+  .auth-card__footer a:hover { 
+    text-decoration: underline; 
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+  <!-- Left Side: Copy -->
+  <div class="auth-side">
+    <h1>Start your <em>own record.</em></h1>
+    <p>One account, every subject you take — and a clearer picture of what's actually hard, what's rated well, and what to revisit.</p>
+
+    <div class="side-points" aria-hidden="true">
+      <div class="side-point">
+        <span class="side-point__mark">1</span>
+        <span class="side-point__text"><b>Track difficulty and GPA</b> per subject, contributed by students like you.</span>
+      </div>
+      <div class="side-point">
+        <span class="side-point__mark">2</span>
+        <span class="side-point__text"><b>Keep private notes</b>, organized in a tree by subject — publish only what you choose to.</span>
+      </div>
+      <div class="side-point">
+        <span class="side-point__mark">3</span>
+        <span class="side-point__text"><b>Save and revisit</b> materials, assignments, and professors across every subject you touch.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Form -->
+  <div class="record auth-card">
+    <span class="record__tab">Rec. 02 — New record</span>
+    <h2>Create your account</h2>
+    <p class="auth-card__sub">It takes under a minute.</p>
+
+    <form method="POST" action="{{ url_for('register') }}" novalidate>
+      <div class="field">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" placeholder="Jordan Rivera" required autofocus>
+      </div>
+      
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@school.edu" required>
+      </div>
+
+      <div class="field">
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+          <option value="1">Student</option>
+          <option value="2">Admin</option>
+          <option value="3">Admin_l2</option>
+          <option value="4">controler</option>
+          <option value="5">controler_l2</option>
+          <option value="6">assistant</option>
+          <option value="7">Professor</option>
+        </select>
+      </div>
+
+      <div class="two-col">
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required>
+        </div>
+        <div class="field">
+          <label for="confirm_password">Confirm</label>
+          <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn--primary btn--block">Create account</button>
+    </form>
+
+    <div class="auth-card__footer">
+      Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

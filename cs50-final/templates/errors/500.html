@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Something broke — Ledger{% endblock %}
+
+{% block main_class %}error-main{% endblock %}
+{% block main_style %}display:flex; justify-content:center; padding-top:80px; padding-bottom:80px;{% endblock %}
+
+{% block page_style %}
+<style>
+  .error-main { max-width: 520px; margin: 0 auto; padding: 0 24px; }
+  .error-card { padding: 40px 34px 34px; text-align: left; }
+  .error-card__code {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase;
+  }
+  .error-card__glyph {
+    font-family: var(--font-display); font-size: 64px; font-weight: 500;
+    line-height: 1; color: var(--warning); margin: 10px 0 4px;
+    font-style: italic;
+  }
+  .error-card h2 { font-size: 21px; margin-bottom: 10px; }
+  .error-card p { color: var(--ink-soft); font-size: 14px; line-height: 1.65; margin-bottom: 18px; }
+  .error-card__detail {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint);
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 10px 12px; margin-bottom: 26px; word-break: break-word;
+  }
+  .error-card__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="record error-card">
+  <span class="record__tab">Rec. 500 — Fault</span>
+  <div class="error-card__code">Ledger · unrecoverable error</div>
+  <div class="error-card__glyph">500</div>
+  <h2>Something broke on our end.</h2>
+  <p>This wasn't something you did — the ledger hit an error it couldn't recover from. It's already been logged. Try again in a moment, or head back to somewhere safe.</p>
+  {% if message %}
+  <div class="error-card__detail">{{ message }}</div>
+  {% endif %}
+  <div class="error-card__actions">
+    <a href="{{ url_for('home') if session.get('user_id') else url_for('login') }}" class="btn btn--primary">
+      {{ 'Back to home' if session.get('user_id') else 'Back to sign in' }}
+    </a>
+    <a href="javascript:history.back()" class="btn btn--ghost">Go back</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Access denied — Ledger{% endblock %}
+
+{% block main_class %}error-main{% endblock %}
+{% block main_style %}display:flex; justify-content:center; padding-top:80px; padding-bottom:80px;{% endblock %}
+
+{% block page_style %}
+<style>
+  .error-main { max-width: 520px; margin: 0 auto; padding: 0 24px; }
+  .error-card { padding: 40px 34px 34px; text-align: left; }
+  .error-card__code {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase;
+  }
+  .error-card__glyph {
+    font-family: var(--font-display); font-size: 64px; font-weight: 500;
+    line-height: 1; color: var(--danger); margin: 10px 0 4px;
+    font-style: italic;
+  }
+  .error-card h2 { font-size: 21px; margin-bottom: 10px; }
+  .error-card p { color: var(--ink-soft); font-size: 14px; line-height: 1.65; margin-bottom: 26px; }
+  .error-card__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="record error-card">
+  <span class="record__tab">Rec. 403 — Sealed</span>
+  <div class="error-card__code">Ledger · access denied</div>
+  <div class="error-card__glyph">403</div>
+  <h2>This entry is sealed to you.</h2>
+  <p>Your account doesn't have the level of access this page requires. If you think that's wrong, it may need a different account, or a status change from an admin.</p>
+  <div class="error-card__actions">
+    <a href="{{ url_for('home') if UserSession.is_logged_in() else url_for('login') }}" class="btn btn--primary">
+      {{ 'Back to home' if UserSession.is_logged_in() else 'Back to sign in' }}
+    </a>
+    {% if not UserSession.is_logged_in() %}
+      <a href="{{ url_for('login') }}" class="btn btn--ghost">Sign in with another account</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
