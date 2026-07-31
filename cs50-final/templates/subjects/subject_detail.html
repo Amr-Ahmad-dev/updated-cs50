@@ -1,0 +1,519 @@
+{% extends "layout.html" %}
+
+{# Define the recursive rendering macro #}
+{% macro render_data(val) %}
+    {% if val is mapping %}
+        {# Render sub-dictionaries as neat nested spec groups #}
+        <div class="nested-spec-group">
+            {% for sub_key, sub_val in val.items() %}
+            <div class="nested-spec-row">
+                <span class="nested-key">{{ sub_key | replace('_', ' ') | title }}</span>
+                <div class="nested-value">{{ render_data(sub_val) }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    {% elif val is iterable and val is not string %}
+        {# Render lists as clean inline tags/pills #}
+        <div class="spec-tag-list">
+            {% for item in val %}
+                <span class="spec-tag">{{ render_data(item) }}</span>
+            {% endfor %}
+        </div>
+    {% elif val is sameas true %}
+        <span class="status-badge badge-success">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Yes
+        </span>
+    {% elif val is sameas false %}
+        <span class="status-badge badge-danger">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            No
+        </span>
+    {% elif val is none %}
+        <span class="empty-value">—</span>
+    {% else %}
+        <span class="primitive-value">{{ val }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% block content %}
+{% set subject_id = subject.get('id') or subject.get('subject_id') %}
+{% set subject_name = subject.get('name') or subject.get('Name') or 'Subject Details' %}
+
+<style>
+    /* Base Theme Variables (Light Mode Default) */
+    :root {
+        --bg-page: #FAF8F5;
+        --bg-card: #FFFFFF;
+        --bg-subtle: #F5F1EA;
+        --border-color: #E6E0D4;
+        --border-light: #F0EBE1;
+        --table-stripe: #FCFBF9;
+        
+        --text-main: #2C2825;
+        --text-muted: #78716C;
+        --text-value: #44403C;
+        
+        --primary-amber: #D97706;
+        --primary-amber-hover: #B45309;
+        --primary-amber-bg: #FEF3C7;
+        --primary-amber-text: #B45309;
+        --primary-amber-border: #FDE68A;
+        
+        --btn-primary-bg: #2A2723;
+        --btn-primary-text: #FFFFFF;
+        --btn-primary-hover: #1A1816;
+        
+        --badge-success-bg: #ECFDF5;
+        --badge-success-text: #047857;
+        --badge-success-border: #A7F3D0;
+        
+        --badge-danger-bg: #FEF2F2;
+        --badge-danger-text: #B91C1C;
+        --badge-danger-border: #FECACA;
+        
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 16px;
+        --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Dark Mode Overrides (Supports OS System Preference & Common HTML Dark Mode Selectors) */
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+            --bg-page: #121110;
+            --bg-card: #1C1917;
+            --bg-subtle: #292524;
+            --border-color: #44403C;
+            --border-light: #322E2B;
+            --table-stripe: #221F1D;
+            
+            --text-main: #F5F5F4;
+            --text-muted: #A8A29E;
+            --text-value: #D6D3D1;
+            
+            --primary-amber: #F59E0B;
+            --primary-amber-hover: #FBBF24;
+            --primary-amber-bg: #451A03;
+            --primary-amber-text: #FDE68A;
+            --primary-amber-border: #78350F;
+            
+            --btn-primary-bg: #F5F5F4;
+            --btn-primary-text: #1C1917;
+            --btn-primary-hover: #E7E5E4;
+            
+            --badge-success-bg: #064E3B;
+            --badge-success-text: #A7F3D0;
+            --badge-success-border: #065F46;
+            
+            --badge-danger-bg: #7F1D1D;
+            --badge-danger-text: #FECACA;
+            --badge-danger-border: #991B1B;
+            
+            --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    /* Class/Data Attribute Overrides for App Toggles */
+    [data-theme="dark"], html.dark, body.dark-mode {
+        --bg-page: #121110;
+        --bg-card: #1C1917;
+        --bg-subtle: #292524;
+        --border-color: #44403C;
+        --border-light: #322E2B;
+        --table-stripe: #221F1D;
+        
+        --text-main: #F5F5F4;
+        --text-muted: #A8A29E;
+        --text-value: #D6D3D1;
+        
+        --primary-amber: #F59E0B;
+        --primary-amber-hover: #FBBF24;
+        --primary-amber-bg: #451A03;
+        --primary-amber-text: #FDE68A;
+        --primary-amber-border: #78350F;
+        
+        --btn-primary-bg: #F5F5F4;
+        --btn-primary-text: #1C1917;
+        --btn-primary-hover: #E7E5E4;
+        
+        --badge-success-bg: #064E3B;
+        --badge-success-text: #A7F3D0;
+        --badge-success-border: #065F46;
+        
+        --badge-danger-bg: #7F1D1D;
+        --badge-danger-text: #FECACA;
+        --badge-danger-border: #991B1B;
+        
+        --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Page & Layout */
+    .subject-page-wrapper {
+        background-color: var(--bg-page);
+        min-height: 100vh;
+        padding: 2rem 1.5rem;
+        color: var(--text-main);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .subject-card {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-subtle);
+        padding: 2rem;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    /* Header Styling */
+    .subject-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-content h1 {
+        margin: 0;
+        font-size: 1.85rem;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -0.02em;
+    }
+
+    .header-breadcrumb {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.4rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+
+    .subject-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn-custom {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1.25rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        border: 1px solid transparent;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-favorite {
+        background-color: var(--bg-subtle);
+        color: var(--text-main);
+        border-color: var(--border-color);
+    }
+
+    .btn-favorite:hover {
+        background-color: var(--border-light);
+    }
+
+    .btn-favorite.active {
+        background-color: var(--primary-amber-bg);
+        color: var(--primary-amber-text);
+        border-color: var(--primary-amber-border);
+    }
+
+    .btn-favorite .star-icon {
+        font-size: 1.1rem;
+        line-height: 1;
+        transition: transform 0.2s ease;
+    }
+
+    .btn-favorite.active .star-icon {
+        color: var(--primary-amber);
+        transform: scale(1.15);
+    }
+
+    .btn-primary-action {
+        background-color: var(--btn-primary-bg);
+        color: var(--btn-primary-text);
+    }
+
+    .btn-primary-action:hover {
+        background-color: var(--btn-primary-hover);
+        color: var(--btn-primary-text);
+        transform: translateY(-1px);
+    }
+
+    /* Table Section */
+    .table-section {
+        margin-top: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-main);
+    }
+
+    .subject-spec-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+    }
+
+    .subject-spec-table th {
+        background-color: var(--bg-subtle);
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.85rem 1.25rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .subject-spec-table td {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-light);
+        vertical-align: top;
+        font-size: 0.95rem;
+    }
+
+    .subject-spec-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .subject-spec-table tr:nth-child(even) {
+        background-color: var(--table-stripe);
+    }
+
+    .spec-label {
+        width: 30%;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .spec-value {
+        width: 70%;
+        color: var(--text-value);
+    }
+
+    /* Nested Macro Component Styling */
+    .nested-spec-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        background: var(--bg-subtle);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 0.75rem 1rem;
+    }
+
+    .nested-spec-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.25rem 0;
+        border-bottom: 1px dashed var(--border-color);
+    }
+
+    .nested-spec-row:last-child {
+        border-bottom: none;
+    }
+
+    .nested-key {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+    .nested-value {
+        font-size: 0.9rem;
+        text-align: right;
+    }
+
+    /* List Tags */
+    .spec-tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    .spec-tag {
+        display: inline-block;
+        background-color: var(--bg-subtle);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.2rem 0.65rem;
+        border-radius: 20px;
+        font-size: 0.825rem;
+        font-weight: 600;
+    }
+
+    .badge-success {
+        background-color: var(--badge-success-bg);
+        color: var(--badge-success-text);
+        border: 1px solid var(--badge-success-border);
+    }
+
+    .badge-danger {
+        background-color: var(--badge-danger-bg);
+        color: var(--badge-danger-text);
+        border: 1px solid var(--badge-danger-border);
+    }
+
+    .empty-value {
+        color: var(--text-muted);
+        font-style: italic;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .subject-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .subject-actions {
+            width: 100%;
+        }
+
+        .btn-custom {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .subject-spec-table th, 
+        .subject-spec-table td {
+            padding: 0.75rem;
+        }
+
+        .spec-label {
+            width: 40%;
+        }
+    }
+</style>
+
+<div class="subject-page-wrapper">
+    <div class="subject-card" data-subject-id="{{ subject_id }}">
+        
+        <!-- Header Actions -->
+        <header class="subject-header">
+            <div class="header-content">
+                <div class="header-breadcrumb">Academic Subject Overview</div>
+                <h1>{{ subject_name }}</h1>
+            </div>
+            
+            <div class="subject-actions">
+                <form method="POST" action="{{ url_for('subject_detail', subject_id=subject_id) }}">
+                    <button type="submit" id="favoriteBtn" class="btn-custom btn-favorite {% if subject.is_favorite %}active{% endif %}" aria-pressed="{{ 'true' if subject.is_favorite else 'false' }}">
+                        <span class="star-icon">★</span>
+                        <span class="text">{% if subject.is_favorite %}Saved to Favorites{% else %}Add to Favorites{% endif %}</span>
+                    </button>
+                    <input type="hidden" name="favorite_action" value="{% if subject.get('is_favorite') %}remove{% else %}add{% endif %}">
+                </form>
+                <a href="{{ url_for('subject_materials', subject_id=subject_id) }}" class="btn-custom btn-primary-action">
+                    <span>View Subject Materials</span>
+                    <span style="font-size: 1.1rem;" aria-hidden="true">→</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Specifications Table Section -->
+        <div class="table-section">
+            <div class="section-title">Course Specifications & Details</div>
+            
+            <table class="subject-spec-table">
+                <thead>
+                    <tr>
+                        <th>Specification</th>
+                        <th>Value / Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in subject.items() %}
+                        {# Filter out metadata keys #}
+                        {% if key not in ['id', 'subject_id', 'is_favorite', 'name', 'Name', 'created_by', 'sts', 'accepted', 'links', 'professor_id'] %}
+                        <tr>
+                            <td class="spec-label">{{ key }}</td>
+                            <td class="spec-value">
+                                {{ render_data(value) }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const favoriteBtn = document.getElementById('favoriteBtn');
+    const container = document.querySelector('[data-subject-id]');
+    const subjectId = container ? container.dataset.subjectId : null;
+
+    if (favoriteBtn && subjectId) {
+        favoriteBtn.addEventListener('click', async () => {
+            const isCurrentlyActive = favoriteBtn.classList.contains('active');
+            const nextState = !isCurrentlyActive;
+            
+            // Optimistic UI update
+            favoriteBtn.classList.toggle('active', nextState);
+            favoriteBtn.setAttribute('aria-pressed', nextState);
+            const btnText = favoriteBtn.querySelector('.text');
+            btnText.textContent = nextState ? 'Saved to Favorites' : 'Add to Favorites';
+
+            try {
+                const response = await fetch(`/api/subjects/${subjectId}/favorite`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ favorite: nextState })
+                });
+
+                if (!response.ok) throw new Error('API update failed');
+            } catch (error) {
+                console.error('Error updating favorite state:', error);
+                // Rollback UI update on failure
+                favoriteBtn.classList.toggle('active', isCurrentlyActive);
+                favoriteBtn.setAttribute('aria-pressed', isCurrentlyActive);
+                btnText.textContent = isCurrentlyActive ? 'Saved to Favorites' : 'Add to Favorites';
+                alert('Could not update favorites. Please check your connection.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
