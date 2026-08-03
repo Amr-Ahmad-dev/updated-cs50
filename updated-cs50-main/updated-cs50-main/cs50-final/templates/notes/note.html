@@ -1,0 +1,579 @@
+{% extends "layout.html" %}
+{% block title %}My Private Notes — Ledger{% endblock %}
+
+{% block page_style %}
+<style>
+  /* ============================================================
+     MY NOTES PAGE - THEME-ADAPTIVE DESIGN SYSTEM
+     ============================================================ */
+
+  .page-header, .notes-section {
+    animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Header Section */
+  .page-header {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 24px; 
+    align-items: flex-end;
+    justify-content: space-between; 
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border, #e2e8f0);
+  }
+
+  .page-header__title h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--ink, #0f172a);
+    margin: 0 0 8px 0;
+    letter-spacing: -0.025em;
+  }
+
+  .page-header__title h1 em {
+    font-style: normal;
+    color: var(--accent, #2563eb);
+  }
+
+  .page-header__title p {
+    color: var(--ink-soft, #64748b);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px;
+    padding: 10px 18px; 
+    font-size: 14px; 
+    font-weight: 600;
+    border-radius: var(--radius, 8px); 
+    cursor: pointer; 
+    transition: all var(--transition-fast, 0.2s ease);
+    text-decoration: none; 
+    border: 1px solid transparent;
+    line-height: 1;
+  }
+
+  .btn--primary {
+    background: var(--accent, #2563eb);
+    color: var(--accent-ink, #ffffff);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  }
+  .btn--primary:hover {
+    background: var(--accent-strong, #1d4ed8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.28);
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--ink, #334155);
+    border-color: var(--border-strong, #cbd5e1);
+  }
+  .btn--ghost:hover {
+    background: var(--surface, #f8fafc);
+    border-color: var(--accent, #2563eb);
+    color: var(--accent, #2563eb);
+  }
+
+  .btn--danger-ghost {
+    background: transparent;
+    color: var(--ink-soft, #64748b);
+    border-color: var(--border, #e2e8f0);
+  }
+  .btn--danger-ghost:hover {
+    background: color-mix(in srgb, var(--danger, #ef4444) 10%, transparent);
+    color: var(--danger, #ef4444);
+    border-color: var(--danger, #ef4444);
+  }
+
+  .btn--sm {
+    padding: 7px 12px;
+    font-size: 12.5px;
+  }
+
+  .btn svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
+
+  /* Subject Sections & Grouping */
+  .subject-group {
+    margin-bottom: 44px;
+  }
+
+  .subject-group__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border, #e2e8f0);
+  }
+
+  .subject-group__tag {
+    background: color-mix(in srgb, var(--accent, #2563eb) 12%, transparent);
+    color: var(--accent, #2563eb);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm, 6px);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .subject-group__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink, #0f172a);
+    margin: 0;
+  }
+
+  /* Notes Grid */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 768px) { .notes-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .notes-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  /* Note Card */
+  .note-card {
+    background: var(--bg-elevated, #ffffff);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: var(--radius-lg, 12px);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.05));
+    transition: all var(--transition-fast, 0.2s ease);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .note-card:hover {
+    box-shadow: var(--shadow-md, 0 8px 20px rgba(0, 0, 0, 0.08));
+    border-color: var(--accent, #2563eb);
+    transform: translateY(-2px);
+  }
+
+  .note-card__body {
+    margin-bottom: 20px;
+  }
+
+  .note-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .note-card__title {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--ink, #0f172a);
+    margin: 0;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .note-card__content {
+    font-size: 14px;
+    color: var(--ink-soft, #475569);
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Status Badges */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm, 6px);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .status-badge--approved {
+    background: color-mix(in srgb, #10b981 12%, transparent);
+    color: #059669;
+  }
+
+  .status-badge--private {
+    background: var(--surface, #f1f5f9);
+    color: var(--ink-soft, #64748b);
+    border: 1px solid var(--border, #e2e8f0);
+  }
+
+  /* Note Actions Toolbar */
+  .note-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border, #f1f5f9);
+    margin-top: auto;
+  }
+
+  .note-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .inline-form {
+    display: inline;
+    margin: 0;
+  }
+
+  /* Empty State */
+  .dash-empty {
+    padding: 48px 20px;
+    color: var(--ink-soft, #64748b);
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: center;
+    background: var(--surface, #f8fafc);
+    border-radius: var(--radius-lg, 12px);
+    border: 2px dashed var(--border-strong, #cbd5e1);
+  }
+  .dash-empty p { margin: 0 0 16px 0; font-weight: 500; }
+
+  /* ============================================================
+     ENLARGED NOTE VIEW MODAL (90% VIEWPORT)
+     ============================================================ */
+  .note-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+
+  .note-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .note-modal-container {
+    width: 90vw;
+    height: 90vh;
+    max-width: 1100px;
+    background: var(--bg-elevated, #ffffff);
+    border-radius: var(--radius-lg, 16px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--border, #cbd5e1);
+    transform: scale(0.96);
+    transition: transform 0.25s ease;
+  }
+
+  .note-modal-overlay.active .note-modal-container {
+    transform: scale(1);
+  }
+
+  .note-modal-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border, #e2e8f0);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--surface, #f8fafc);
+  }
+
+  .note-modal-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .note-modal-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--ink, #0f172a);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .note-modal-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-soft, #64748b);
+    padding: 8px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .note-modal-close:hover {
+    background: var(--border, #e2e8f0);
+    color: var(--ink, #0f172a);
+  }
+
+  .note-modal-close svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    fill: none;
+  }
+
+  .note-modal-body {
+    padding: 32px 36px;
+    overflow-y: auto;
+    flex: 1;
+    background: var(--bg-elevated, #ffffff);
+  }
+
+  .note-modal-content {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink, #334155);
+    white-space: pre-wrap;
+    word-break: break-word;
+    user-select: text;
+  }
+
+  .note-modal-footer {
+    padding: 18px 28px;
+    border-top: 1px solid var(--border, #e2e8f0);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    background: var(--surface, #f8fafc);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{# ============================================================
+   JINJA MACRO: Render Single Note Card
+   ============================================================ #}
+{% macro render_note_card(note) %}
+  {% set ns = namespace(
+    id=none,
+    title='',
+    content='No content available.',
+    is_published=false
+  ) %}
+
+  {% if note is mapping %}
+    {% set ns.id = note.get('id') if note.get('id') is not none else note.get('note_id') %}
+    {% set raw_title = note.get('title') if note.get('title') else '' %}
+    {% set raw_content = note.get('content') if note.get('content') else '' %}
+    
+    {% if raw_title | trim != '' %}
+      {% set ns.title = raw_title %}
+    {% elif raw_content | trim != '' %}
+      {% set ns.title = raw_content[:30] ~ '...' %}
+    {% else %}
+      {% set ns.title = 'Note #' ~ ns.id %}
+    {% endif %}
+
+    {% set ns.content = raw_content if raw_content != '' else 'No content available.' %}
+    {% set ns.is_published = note.get('is_published', false) %}
+  {% endif %}
+
+  {% if ns.id is not none %}
+    {% set edit_url = url_for('note_edit', note_id=ns.id) %}
+    <div class="note-card" onclick="openNoteModal({{ ns.id }}, {{ ns.title | tojson | safe }}, {{ ns.content | tojson | safe }}, {{ ns.is_published | tojson | safe }}, '{{ edit_url }}')">
+      <div class="note-card__body">
+        <div class="note-card__head">
+          <h3 class="note-card__title">{{ ns.title }}</h3>
+          {% if ns.is_published %}
+            <span class="status-badge status-badge--approved">Published</span>
+          {% else %}
+            <span class="status-badge status-badge--private">Private</span>
+          {% endif %}
+        </div>
+        <p class="note-card__content">{{ ns.content }}</p>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="note-card__footer" onclick="event.stopPropagation();">
+        <div class="note-card__actions">
+          <a href="{{ edit_url }}" class="btn btn--ghost btn--sm">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Edit
+          </a>
+
+          <form action="{{ url_for('note_delete', note_id=ns.id) }}" method="POST" class="inline-form" onsubmit="return confirm('Delete this note?');">
+            <button type="submit" class="btn btn--danger-ghost btn--sm">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+<!-- Header Section -->
+<div class="page-header">
+  <div class="page-header__title">
+    <h1>My Private <em>Notes</em></h1>
+    <p>Organize, review, and publish your personal study records.</p>
+  </div>
+  <div>
+    <a href="{{ url_for('note_add') }}" class="btn btn--primary">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+      Create a note
+    </a>
+  </div>
+</div>
+
+<!-- Main Notes Content -->
+<div class="notes-section">
+  {% if not tree %}
+    <div class="dash-empty">
+      <p>No notes found in your collection.</p>
+      <a href="{{ url_for('note_add') }}" class="btn btn--ghost btn--sm">Create your first note →</a>
+    </div>
+  {% else %}
+    {% for subject, notes_list in tree.items() %}
+      <div class="subject-group">
+        <div class="subject-group__header">
+          <span class="subject-group__tag">Subject</span>
+          <h2 class="subject-group__title">{{ subject }}</h2>
+        </div>
+
+        <div class="notes-grid">
+          {# Robust Unpacker: Unwraps dictionary wrappers like [{0: note1, 1: note2, 'title': 'Note #None'}] #}
+          {% for item in notes_list %}
+            {% if item is mapping %}
+              {% if 'id' in item and (item.id is number or item.id is string) %}
+                {{ render_note_card(item) }}
+              {% else %}
+                {# Container dictionary with integer keys #}
+                {% for k, sub_item in item.items() %}
+                  {% if sub_item is mapping and ('id' in sub_item or 'content' in sub_item) %}
+                    {{ render_note_card(sub_item) }}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% else %}
+              {{ render_note_card(item) }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<!-- Enlarged View Modal (90% Display View) -->
+<div id="noteModal" class="note-modal-overlay" aria-hidden="true">
+  <div class="note-modal-container">
+    <div class="note-modal-header">
+      <div class="note-modal-header-info">
+        <span id="modalStatusBadge" class="status-badge"></span>
+        <h2 id="modalNoteTitle" class="note-modal-title"></h2>
+      </div>
+      <button type="button" class="note-modal-close" onclick="closeNoteModal()" aria-label="Close Note">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="note-modal-body">
+      <div id="modalNoteContent" class="note-modal-content"></div>
+    </div>
+    <div class="note-modal-footer">
+      <a id="modalEditBtn" href="#" class="btn btn--ghost btn--sm">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        Edit Note
+      </a>
+      <button type="button" class="btn btn--primary btn--sm" onclick="closeNoteModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openNoteModal(id, title, content, isPublished, editUrl) {
+    document.getElementById('modalNoteTitle').textContent = title;
+    document.getElementById('modalNoteContent').textContent = content;
+    
+    const badge = document.getElementById('modalStatusBadge');
+    if (isPublished === true || isPublished === 'true') {
+      badge.className = 'status-badge status-badge--approved';
+      badge.textContent = 'Published';
+    } else {
+      badge.className = 'status-badge status-badge--private';
+      badge.textContent = 'Private';
+    }
+
+    document.getElementById('modalEditBtn').href = editUrl;
+    
+    const modal = document.getElementById('noteModal');
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeNoteModal() {
+    const modal = document.getElementById('noteModal');
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Dismiss on overlay background click
+  document.addEventListener('click', function(e) {
+    const modal = document.getElementById('noteModal');
+    if (e.target === modal) {
+      closeNoteModal();
+    }
+  });
+
+  // Dismiss on ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeNoteModal();
+    }
+  });
+</script>
+
+{% endblock %}
