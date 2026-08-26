@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Subject Approvals — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Pending Course Submissions</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 28px; margin-bottom: 6px;">Subject Approval Queue</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Review and approve student or instructor course submissions before they become public.</p>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn--ghost">&larr; Back to Dashboard</a>
+  </div>
+
+  {% if pending %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for s in pending %}
+    <div class="card" style="padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div style="flex: 1; min-width: 260px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+          <span class="chip" style="font-weight: 600;">{{ s.code }}</span>
+          <span style="font-size: 12px; color: var(--ink-faint);" class="mono">Year {{ s.year }}, Semester {{ s.semester }} · {{ s.credits }} Credits</span>
+        </div>
+        <h2 style="font-size: 20px; margin-bottom: 8px; color: var(--ink);">{{ s.name }}</h2>
+        <p style="font-size: 14px; color: var(--ink-soft); margin: 0 0 12px 0;">{{ s.description or 'No description provided.' }}</p>
+        <div style="font-size: 12.5px; color: var(--ink-faint);">
+          Submitted by: <strong style="color: var(--ink);">{{ s.creator_name or s.creator_email or 'User #' + s.created_by|string }}</strong> on {{ s.created_at }}
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{{ url_for('subject_detail', subject_id=s.id) }}" class="btn btn--ghost" style="padding: 8px 16px;">Preview</a>
+        <form method="POST" action="{{ url_for('admin_subject_approve', subject_id=s.id) }}" style="margin: 0;">
+          <button type="submit" class="btn btn--primary" style="padding: 8px 18px; background: var(--success); color: #fff;">
+            Approve &amp; Publish
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Pending Subjects</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">All submitted subjects have been reviewed and approved.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

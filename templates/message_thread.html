@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}Chat with {{ thread.other_user.name }} — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="max-width: 820px; margin: 0 auto; padding: 28px; display: flex; flex-direction: column; height: 75vh; min-height: 520px;">
+  <span class="record__tab">Direct Conversation</span>
+
+  <!-- Chat Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      {% if thread.other_user.avatar %}
+        <img src="{{ thread.other_user.avatar }}" class="avatar avatar--sm" alt="">
+      {% else %}
+        <span class="avatar avatar--sm">{{ thread.other_user.name[0]|upper if thread.other_user.name else 'U' }}</span>
+      {% endif %}
+      <div>
+        <h2 style="font-size: 18px; margin: 0; color: var(--ink);">{{ thread.other_user.name }}</h2>
+        <span class="mono" style="font-size: 12px; color: var(--ink-soft);">{{ thread.other_user.email }}</span>
+      </div>
+    </div>
+
+    <a href="{{ url_for('message_list') }}" class="btn btn--ghost" style="padding: 6px 14px; font-size: 13px;">&larr; Inbox</a>
+  </div>
+
+  <!-- Messages Stream -->
+  <div style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 12px 6px; margin-bottom: 16px;" id="messageStream">
+    {% for msg in thread.messages %}
+      <div style="display: flex; flex-direction: column; {% if msg.is_mine %}align-items: flex-end;{% else %}align-items: flex-start;{% endif %}">
+        <div style="max-width: 75%; padding: 12px 18px; border-radius: var(--radius-lg); font-size: 14.5px; line-height: 1.5; {% if msg.is_mine %}background: var(--ink); color: var(--bg); border-bottom-right-radius: 2px;{% else %}background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-bottom-left-radius: 2px;{% endif %}">
+          {{ msg.content }}
+        </div>
+        <span class="mono" style="font-size: 11px; color: var(--ink-faint); margin-top: 4px;">{{ msg.created_at }}</span>
+      </div>
+    {% else %}
+      <div style="margin: auto; text-align: center; color: var(--ink-faint); font-style: italic;">
+        No messages yet. Send a greeting to start this conversation!
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Send Message Form -->
+  <form method="POST" action="{{ url_for('message_thread', other_user_id=other_user_id) }}" style="display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--border); padding-top: 16px;">
+    <input type="text" name="content" placeholder="Type your message..." required autocomplete="off" autofocus style="flex: 1; padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: var(--bg); color: var(--ink); font-size: 14.5px;">
+    <button type="submit" class="btn btn--primary" style="padding: 12px 24px;">Send</button>
+  </form>
+</div>
+
+<script>
+  // Auto-scroll chat stream to bottom on load
+  (function () {
+    var stream = document.getElementById('messageStream');
+    if (stream) {
+      stream.scrollTop = stream.scrollHeight;
+    }
+  })();
+</script>
+{% endblock %}

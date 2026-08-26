@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block title %}Sign in — Ledger{% endblock %}
+
+{% block page_style %}
+<style>
+  .auth-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 36px;
+    max-width: 920px;
+    margin: 24px auto 0;
+    align-items: start;
+  }
+  @media (min-width: 820px) { .auth-shell { grid-template-columns: 1fr 1fr; gap: 56px; } }
+
+  .auth-side { padding-top: 8px; }
+  .auth-side h1 { font-size: 32px; font-weight: 500; line-height: 1.25; max-width: 22ch; }
+  .auth-side h1 em { font-style: italic; color: var(--accent); }
+  .auth-side p { color: var(--ink-soft); font-size: 14.5px; margin-top: 14px; max-width: 40ch; }
+
+  .ledger-preview { margin-top: 34px; display: flex; flex-direction: column; gap: 1px; }
+  .ledger-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 14px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+  }
+  .ledger-row:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+  .ledger-row:last-child { border-radius: 0 0 var(--radius) var(--radius); border-top: none; }
+  .ledger-row + .ledger-row { border-top: none; }
+  .ledger-row__code { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); width: 62px; flex: none; }
+  .ledger-row__name { font-size: 13.5px; flex: 1; }
+  .ledger-row__stat { font-family: var(--font-mono); font-size: 12px; color: var(--accent-strong); font-weight: 600; }
+
+  .auth-card { padding: 34px 30px 30px; margin-top: 6px; }
+  .auth-card h2 { font-size: 22px; margin-bottom: 6px; }
+  .auth-card__sub { color: var(--ink-soft); font-size: 13.5px; margin-bottom: 26px; }
+  .auth-card__footer { margin-top: 22px; text-align: center; font-size: 13.5px; color: var(--ink-soft); }
+  .auth-card__footer a { color: var(--accent-strong); font-weight: 600; }
+  .auth-card__footer a:hover { text-decoration: underline; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+  <div class="auth-side">
+    <h1>Every subject, <em>rated, weighed,</em> and remembered.</h1>
+    <p>Ledger keeps one honest record of your coursework — difficulty, ratings, GPA, and the notes you actually took — organized the way a catalog is: by subject, in order.</p>
+
+    <div class="ledger-preview" aria-hidden="true">
+      <div class="ledger-row">
+        <span class="ledger-row__code">CS101</span>
+        <span class="ledger-row__name">Data Structures</span>
+        <span class="ledger-row__stat">4.2 ★</span>
+      </div>
+      <div class="ledger-row">
+        <span class="ledger-row__code">MA204</span>
+        <span class="ledger-row__name">Linear Algebra</span>
+        <span class="ledger-row__stat">3.6 ★</span>
+      </div>
+      <div class="ledger-row">
+        <span class="ledger-row__code">PH110</span>
+        <span class="ledger-row__name">Mechanics</span>
+        <span class="ledger-row__stat">4.0 ★</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="record auth-card">
+    <span class="record__tab">Rec. 01 — Sign in</span>
+    <h2>Welcome back</h2>
+    <p class="auth-card__sub">Log in to pick up where you left off.</p>
+
+    <form method="POST" action="{{ url_for('login') }}" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@school.edu" required autofocus>
+      </div>
+      <div class="field">
+        <div class="field__row">
+          <label for="password">Password</label>
+          <a href="{{ url_for('forgot_password') }}">Forgot it?</a>
+        </div>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Sign in</button>
+    </form>
+
+    <div class="auth-card__footer">
+      New to Ledger? <a href="{{ url_for('register') }}">Create an account</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

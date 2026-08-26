@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% block title %}Ratings &amp; Reviews — {{ subject.code }}{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Course Evaluation</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+        <span class="chip" style="font-weight: 600;">{{ subject.code }}</span>
+        <span class="mono" style="font-size: 13px; color: var(--ink-faint);">Year {{ subject.year }}, Term {{ subject.semester }}</span>
+      </div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">{{ subject.name }} Student Ratings</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Student ratings, reviews, and satisfaction scores for this course offering.</p>
+    </div>
+    <a href="{{ url_for('subject_detail', subject_id=subject.id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; margin-bottom: 36px;">
+    
+    <!-- Rating Overview KPI Card -->
+    <div class="card" style="padding: 24px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <span class="detail__label" style="margin-bottom: 8px;">Overall Student Score</span>
+      <div style="font-family: var(--font-display); font-size: 48px; font-weight: 600; color: var(--accent); line-height: 1;">
+        {{ ratings.average_score }} <span style="font-size: 24px; color: var(--ink-faint);">/ 5.0</span>
+      </div>
+      <div style="font-size: 13.5px; color: var(--ink-soft); margin-top: 8px;">
+        Based on <strong>{{ ratings.total_votes }}</strong> student submissions
+      </div>
+
+      <!-- Star Distribution -->
+      <div style="width: 100%; max-width: 240px; margin-top: 20px; display: flex; flex-direction: column; gap: 6px;">
+        {% for star in [5, 4, 3, 2, 1] %}
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px;">
+          <span class="mono" style="width: 36px; text-align: right;">{{ star }} ★</span>
+          <div style="flex: 1; height: 8px; background: var(--surface); border-radius: 99px; overflow: hidden;">
+            <div style="height: 100%; background: var(--accent); width: {% if ratings.total_votes > 0 %}{{ (ratings.distribution[star] / ratings.total_votes * 100)|round }}{% else %}0{% endif %}%;"></div>
+          </div>
+          <span class="mono" style="width: 24px; color: var(--ink-faint);">{{ ratings.distribution[star] }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Rating Submission Form -->
+    <div class="card" style="padding: 24px; background: var(--surface);">
+      <h2 style="font-size: 19px; color: var(--ink); margin-bottom: 6px;">
+        {% if user_rating %}Update Your Evaluation{% else %}Submit Your Rating{% endif %}
+      </h2>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 18px 0;">Help future students understand course quality and pace.</p>
+
+      <form method="POST" action="{{ url_for('subject_ratings', subject_id=subject.id) }}">
+        <div class="field">
+          <label for="score">Overall Quality Rating (1 to 5 Stars)</label>
+          <select id="score" name="score" required>
+            <option value="5" {% if user_rating and user_rating.raw_score == 5 %}selected{% endif %}>★★★★★ (5 Stars — Exceptional)</option>
+            <option value="4" {% if user_rating and user_rating.raw_score == 4 %}selected{% endif %}>★★★★☆ (4 Stars — Good)</option>
+            <option value="3" {% if not user_rating or user_rating.raw_score == 3 %}selected{% endif %}>★★★☆☆ (3 Stars — Average)</option>
+            <option value="2" {% if user_rating and user_rating.raw_score == 2 %}selected{% endif %}>★★☆☆☆ (2 Stars — Below Average)</option>
+            <option value="1" {% if user_rating and user_rating.raw_score == 1 %}selected{% endif %}>★☆☆☆☆ (1 Star — Poor)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="difficulty">Perceived Difficulty</label>
+          <select id="difficulty" name="difficulty">
+            <option value="1" {% if user_rating and user_rating.difficulty == 1 %}selected{% endif %}>1 — Very Easy</option>
+            <option value="2" {% if user_rating and user_rating.difficulty == 2 %}selected{% endif %}>2 — Easy</option>
+            <option value="3" {% if not user_rating or user_rating.difficulty == 3 %}selected{% endif %}>3 — Moderate</option>
+            <option value="4" {% if user_rating and user_rating.difficulty == 4 %}selected{% endif %}>4 — Challenging</option>
+            <option value="5" {% if user_rating and user_rating.difficulty == 5 %}selected{% endif %}>5 — Very Hard</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="gpa">Your Grade Point at Time of Vote (Optional)</label>
+          <input type="number" id="gpa" name="gpa" step="0.01" min="0" max="4" value="{{ user_rating.gpa_at_vote if user_rating else '' }}" placeholder="e.g. 3.75">
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--block" style="margin-top: 16px;">
+          {% if user_rating %}Update Evaluation{% else %}Submit Rating{% endif %}
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Recent Submissions List -->
+  <h2 style="font-size: 20px; margin-bottom: 16px;">Recent Submissions</h2>
+  {% if ratings.reviews %}
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    {% for r in ratings.reviews %}
+    <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="chip" style="background: var(--accent-soft); color: var(--accent-strong); font-weight: 700;">{{ r.raw_score }} ★</span>
+        <div>
+          <strong style="color: var(--ink);">{{ r.voter_name or 'Anonymous Student' }}</strong>
+          {% if r.difficulty %}<span style="font-size: 13px; color: var(--ink-soft); margin-left: 8px;">Difficulty: {{ r.difficulty }}/5</span>{% endif %}
+          {% if r.gpa_at_vote %}<span class="mono" style="font-size: 12px; color: var(--teal); margin-left: 8px;">(GPA {{ r.gpa_at_vote }})</span>{% endif %}
+        </div>
+      </div>
+      <span class="mono" style="font-size: 12px; color: var(--ink-faint);">{{ r.created_at }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p style="color: var(--ink-faint); font-style: italic; margin: 0;">No student evaluations have been recorded for this course yet.</p>
+  {% endif %}
+
+</div>
+{% endblock %}

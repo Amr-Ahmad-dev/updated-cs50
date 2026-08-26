@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block title %}Course Schedule — {{ calendar.subject.code if calendar.subject else 'Calendar' }}{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Course Timeline</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+        <span class="chip" style="font-weight: 600;">{{ calendar.subject.code }}</span>
+        <span class="mono" style="font-size: 13px; color: var(--ink-faint);">Year {{ calendar.subject.year }}, Term {{ calendar.subject.semester }}</span>
+      </div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">{{ calendar.subject.name }} Schedule</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Upcoming examination dates, assignment milestones, and lecture deadlines for this course.</p>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <a href="{{ url_for('subject_detail', subject_id=calendar.subject.id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+    </div>
+  </div>
+
+  <!-- Events / Exams Section -->
+  <h2 style="font-size: 20px; margin-bottom: 14px;">Exams &amp; Scheduled Milestones</h2>
+  {% if calendar.events %}
+  <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+    {% for e in calendar.events %}
+    <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span class="chip" style="font-size: 11px; background: var(--teal); color: #fff;">{{ e.status|capitalize }}</span>
+          <span class="mono" style="font-size: 13px; color: var(--ink-soft);">{{ e.event_date or 'TBA' }}</span>
+        </div>
+        <h3 style="font-size: 17px; margin-bottom: 4px; color: var(--ink);">{{ e.title }}</h3>
+        <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">{{ e.description }}</p>
+      </div>
+
+      {% if e.url %}
+        <a href="{{ e.url }}" target="_blank" rel="noopener noreferrer" class="btn btn--ghost" style="padding: 6px 12px; font-size: 12.5px;">Meeting Link &rarr;</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 24px; text-align: center; background: var(--surface); border-radius: var(--radius); margin-bottom: 32px;">
+    <p style="color: var(--ink-faint); margin: 0; font-style: italic;">No specific exam milestones scheduled for this course yet.</p>
+  </div>
+  {% endif %}
+
+  <!-- Assignments Deadlines Section -->
+  <h2 style="font-size: 20px; margin-bottom: 14px;">Assignment Deadlines</h2>
+  {% if calendar.assignments %}
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    {% for a in calendar.assignments %}
+    <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h3 style="font-size: 17px; margin-bottom: 4px; color: var(--ink);">
+          <a href="{{ url_for('assignment_detail', subject_id=calendar.subject.id, assignment_id=a.id) }}">{{ a.title }}</a>
+        </h3>
+        <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">{{ a.description }}</p>
+      </div>
+
+      <a href="{{ url_for('assignment_detail', subject_id=calendar.subject.id, assignment_id=a.id) }}" class="btn btn--primary" style="padding: 6px 14px; font-size: 12.5px;">View Assignment &rarr;</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 24px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <p style="color: var(--ink-faint); margin: 0; font-style: italic;">No assignments currently listed for this course.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

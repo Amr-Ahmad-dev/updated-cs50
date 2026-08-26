@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}My Courses — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Faculty Courses</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 32px; margin-bottom: 6px;">Courses Taught by You</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 15px;">All subjects where you are listed as the active course instructor.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('subject_add') }}" class="btn btn--primary">+ Propose New Subject</a>
+      <a href="{{ url_for('professor_dashboard') }}" class="btn btn--ghost">&larr; Dashboard</a>
+    </div>
+  </div>
+
+  {% if subjects %}
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+    {% for s in subjects %}
+    <div class="card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span class="chip" style="font-weight: 600;">{{ s.code }}</span>
+          <span class="mono" style="font-size: 12px; color: var(--ink-faint);">{{ s.credits }} credits</span>
+        </div>
+        <h3 style="font-size: 19px; margin-bottom: 6px;">
+          <a href="{{ url_for('subject_detail', subject_id=s.id) }}">{{ s.name }}</a>
+        </h3>
+        <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 16px 0;">Year {{ s.year }}, Semester {{ s.semester }}</p>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+          <span class="chip" style="font-size: 12px; background: var(--surface);">{{ s.material_count }} Materials</span>
+          <span class="chip" style="font-size: 12px; background: var(--surface);">{{ s.assignment_count }} Assignments</span>
+          {% if s.avg_rating %}
+            <span class="chip" style="font-size: 12px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 600;">★ {{ s.avg_rating }} / 5.0</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 8px;">
+        <a href="{{ url_for('material_upload', subject_id=s.id) }}" class="btn btn--primary" style="padding: 6px 12px; font-size: 12.5px;">+ Upload</a>
+        <a href="{{ url_for('subject_materials', subject_id=s.id) }}" class="btn btn--ghost" style="padding: 6px 12px; font-size: 12.5px;">Materials</a>
+        <a href="{{ url_for('subject_detail', subject_id=s.id) }}" class="btn btn--ghost" style="padding: 6px 12px; font-size: 12.5px;">Hub &rarr;</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Courses Assigned</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Contact an administrator or propose a new course offering.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

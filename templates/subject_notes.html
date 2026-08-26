@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Public Notes — {{ subject_id }}{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Public Study Repository</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">Community Study Notes</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Peer-contributed, admin-approved summaries and lecture guides for this course.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('note_add') }}" class="btn btn--primary">+ Write a Note</a>
+      <a href="{{ url_for('subject_detail', subject_id=subject_id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+    </div>
+  </div>
+
+  {% if notes %}
+  <div style="display: flex; flex-direction: column; gap: 18px;">
+    {% for n in notes %}
+    <div class="card" style="padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          {% if n.author_avatar %}
+            <img src="{{ n.author_avatar }}" class="avatar avatar--sm" alt="">
+          {% else %}
+            <span class="avatar avatar--sm">{{ n.author_name[0]|upper if n.author_name else 'S' }}</span>
+          {% endif %}
+          <div>
+            <strong style="color: var(--ink);">{{ n.author_name or 'Classmate' }}</strong>
+            <span class="mono" style="font-size: 12px; color: var(--ink-faint); margin-left: 8px;">{{ n.created_at }}</span>
+          </div>
+        </div>
+        <span class="chip" style="background: var(--success-soft); color: var(--success); font-size: 11.5px;">Approved</span>
+      </div>
+
+      <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 10px;">{{ n.title }}</h2>
+      <div style="font-size: 14.5px; line-height: 1.6; color: var(--ink); white-space: pre-wrap; background: var(--surface); padding: 18px; border-radius: var(--radius); border: 1px solid var(--border);">{{ n.content }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Public Notes Published Yet</div>
+    <p style="color: var(--ink-soft); margin: 0 0 16px 0; font-size: 14px;">Take notes in your workspace and request publication to share with peers.</p>
+    <a href="{{ url_for('note_add') }}" class="btn btn--primary">+ Add Course Note</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

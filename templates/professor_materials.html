@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Professor Materials — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">My Uploaded Resources</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 32px; margin-bottom: 6px;">Course Materials Uploaded by You</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 15px;">Lecture notes, presentations, and documents published to your assigned courses.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('professor_dashboard') }}" class="btn btn--ghost">&larr; Dashboard</a>
+    </div>
+  </div>
+
+  {% if materials %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for m in materials %}
+    <div class="card" style="padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div style="flex: 1; min-width: 260px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+          <span class="chip" style="font-weight: 600;">{{ m.subject_code }}</span>
+          <span class="chip" style="background: var(--surface);">{{ m.material_type|capitalize }}</span>
+          <span class="chip" style="background: var(--accent-soft); color: var(--accent-strong);">{{ m.content_type|capitalize }}</span>
+        </div>
+        <h3 style="font-size: 18px; margin-bottom: 6px; color: var(--ink);">{{ m.title }}</h3>
+        <p style="font-size: 14px; color: var(--ink-soft); margin: 0 0 10px 0;">{{ m.description or 'No description' }}</p>
+        {% if m.file_path %}
+          <a href="{{ m.file_path }}" target="_blank" rel="noopener noreferrer" style="font-size: 13px; color: var(--teal); text-decoration: underline;" class="mono">Open File / Resource &rarr;</a>
+        {% endif %}
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{{ url_for('material_edit', subject_id=m.subject_id, material_id=m.id) }}" class="btn btn--ghost" style="padding: 6px 14px;">Edit</a>
+        <form method="POST" action="{{ url_for('material_delete', subject_id=m.subject_id, material_id=m.id) }}" style="margin: 0;" onsubmit="return confirm('Are you sure you want to delete this material?');">
+          <button type="submit" class="btn btn--ghost" style="padding: 6px 14px; color: var(--danger); border-color: var(--danger-soft);">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Materials Uploaded Yet</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Upload slides or documents directly from your subjects pages.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

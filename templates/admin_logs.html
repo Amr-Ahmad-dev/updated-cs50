@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Audit & Moderation Logs — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Audit Trail</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 28px; margin-bottom: 6px;">Platform Audit &amp; Moderation Logs</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Chronological ledger of user moderation actions and content approval decisions.</p>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn--ghost">&larr; Back to Dashboard</a>
+  </div>
+
+  {% if logs %}
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th style="padding: 10px 14px;">Timestamp</th>
+          <th style="padding: 10px 14px;">Scope</th>
+          <th style="padding: 10px 14px;">Action</th>
+          <th style="padding: 10px 14px;">Actor</th>
+          <th style="padding: 10px 14px;">Target</th>
+          <th style="padding: 10px 14px;">Reason / Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in logs %}
+        <tr>
+          <td style="padding: 12px 14px; font-size: 12.5px;" class="mono">{{ l.created_at }}</td>
+          <td style="padding: 12px 14px;">
+            <span class="chip" style="font-size: 11px;">{{ l.log_type|upper }}</span>
+          </td>
+          <td style="padding: 12px 14px;">
+            <span class="chip" style="font-weight: 600; {% if l.action in ['ban', 'delete', 'reject'] %}background: var(--danger-soft); color: var(--danger);{% elif l.action == 'warn' %}background: var(--warning-soft); color: var(--warning);{% else %}background: var(--success-soft); color: var(--success);{% endif %}">
+              {{ l.action|upper }}
+            </span>
+          </td>
+          <td style="padding: 12px 14px;">{{ l.actor_name or l.actor_email }}</td>
+          <td style="padding: 12px 14px; font-weight: 500;">{{ l.target_name }}</td>
+          <td style="padding: 12px 14px; color: var(--ink-soft); font-size: 13.5px;">{{ l.reason or 'No reason recorded' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Logs Recorded</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Audit actions will appear here automatically.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

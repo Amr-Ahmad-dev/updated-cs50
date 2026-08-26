@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block title %}{{ professor.name }} — Faculty Overview{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Professor Profile Header Card -->
+  <div class="record record--profile">
+    <span class="record__tab">Faculty Profile</span>
+
+    <div class="profile-head">
+      {% if professor.avatar %}
+        <img src="{{ professor.avatar }}" class="avatar avatar--lg" alt="">
+      {% else %}
+        <span class="avatar avatar--lg">{{ professor.name[0]|upper if professor.name else 'P' }}</span>
+      {% endif %}
+
+      <div class="profile-heading">
+        <div class="profile-heading__eyebrow">{{ professor.department }}</div>
+        <h1 class="profile-heading__name">{{ professor.name }}</h1>
+        <div class="profile-heading__term">
+          <span class="mono">{{ professor.email }}</span> · <span>Office: {{ professor.office }}</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{{ url_for('message_thread', other_user_id=professor.id) }}" class="btn btn--primary">Send Direct Message</a>
+        <a href="{{ url_for('professor_list') }}" class="btn btn--ghost">&larr; Faculty Directory</a>
+      </div>
+    </div>
+
+    <!-- Details and Bio -->
+    <div class="detail-grid" style="margin-bottom: 24px;">
+      <div class="detail">
+        <span class="detail__label">Department</span>
+        <span class="detail__value">{{ professor.department }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Faculty Office</span>
+        <span class="detail__value">{{ professor.office }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Student Rating</span>
+        <span class="detail__value">
+          {% if professor.rating %}
+            <span style="color: var(--accent); font-weight: 600;">★ {{ professor.rating }} / 5.0</span>
+            <span style="font-size: 12px; color: var(--ink-soft);">({{ professor.vote_count }} ratings)</span>
+          {% else %}
+            <span class="detail__value--empty">No ratings yet</span>
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Active Courses</span>
+        <span class="detail__value mono">{{ professor.subjects|length }} courses</span>
+      </div>
+    </div>
+
+    {% if professor.bio %}
+    <div style="background: var(--surface); padding: 18px; border-radius: var(--radius); border: 1px solid var(--border);">
+      <span class="detail__label" style="margin-bottom: 6px; display: block;">Biography &amp; Research</span>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink);">{{ professor.bio }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Taught Subjects Grid -->
+  <div class="record" style="padding: 32px;">
+    <span class="record__tab">Course Catalog</span>
+    <h2 style="font-size: 22px; margin-bottom: 6px;">Courses Taught by {{ professor.name }}</h2>
+    <p style="color: var(--ink-soft); font-size: 14px; margin-bottom: 24px;">Browse subjects, lecture materials, and academic assignments instructed by this professor.</p>
+
+    {% if professor.subjects %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+      {% for s in professor.subjects %}
+      <div class="card" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span class="chip" style="font-weight: 600;">{{ s.code }}</span>
+            <span class="mono" style="font-size: 12px; color: var(--ink-faint);">{{ s.credits }} credits</span>
+          </div>
+          <h3 style="font-size: 17px; margin-bottom: 6px; color: var(--ink);">
+            <a href="{{ url_for('subject_detail', subject_id=s.id) }}">{{ s.name }}</a>
+          </h3>
+          <div style="font-size: 13px; color: var(--ink-soft); margin-bottom: 12px;">Year {{ s.year }}, Semester {{ s.semester }}</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border);">
+          <a href="{{ url_for('subject_materials', subject_id=s.id) }}" style="font-size: 13px; color: var(--teal); font-weight: 500;">Materials &rarr;</a>
+          <a href="{{ url_for('subject_detail', subject_id=s.id) }}" class="btn btn--ghost" style="padding: 4px 12px; font-size: 12.5px;">View Course</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="padding: 36px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+      <p style="color: var(--ink-faint); margin: 0; font-style: italic;">No active courses are assigned to this professor at this time.</p>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

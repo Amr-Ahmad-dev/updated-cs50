@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Note Publication Approvals — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Public Note Requests</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 28px; margin-bottom: 6px;">Note Approval Queue</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Review student notes requested for public course sharing.</p>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn--ghost">&larr; Back to Dashboard</a>
+  </div>
+
+  {% if pending %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for n in pending %}
+    <div class="card" style="padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 12px;">
+        <div>
+          <span class="chip" style="margin-bottom: 6px;">{{ n.entity_name or 'Subject Note' }}</span>
+          <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 4px;">{{ n.title or 'Untitled Note' }}</h2>
+          <div style="font-size: 12.5px; color: var(--ink-faint);">
+            By <strong style="color: var(--ink);">{{ n.author_name or n.author_email }}</strong> on {{ n.created_at }}
+          </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('admin_note_approve', note_id=n.id) }}" style="margin: 0;">
+          <button type="submit" class="btn btn--primary" style="padding: 8px 18px; background: var(--success); color: #fff;">
+            Approve &amp; Make Public
+          </button>
+        </form>
+      </div>
+
+      <div style="background: var(--surface); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border); font-size: 14.5px; line-height: 1.6; white-space: pre-wrap; color: var(--ink);">{{ n.content }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Pending Notes</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">No student notes are currently awaiting public publication.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

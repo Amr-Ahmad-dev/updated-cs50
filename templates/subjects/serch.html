@@ -1,0 +1,460 @@
+{% extends "layout.html" %}
+
+{% block title %}Subjects{% endblock %}
+
+{% block main_class %}container{% endblock %}
+
+{% block page_style %}
+<style>
+  /* ============================================================
+     SUBJECTS VIEW - THEME-ADAPTIVE DESIGN SYSTEM
+     ============================================================ */
+
+  .view-wrapper {
+    animation: fadeIn 0.4s ease-out forwards;
+    padding-bottom: 40px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header__content h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .page-header__content h2 svg {
+    color: var(--accent);
+  }
+
+  .page-header__content p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  /* Filter Console */
+  .filter-panel {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition-fast);
+  }
+
+  .filter-panel__header {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-group label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14.5px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface);
+    color: var(--ink);
+    transition: all var(--transition-fast);
+    box-sizing: border-box;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    background-color: var(--bg-elevated);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  select.form-control {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238B948E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 14.5px;
+    font-weight: 600;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+
+  .btn--primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .btn--primary:hover {
+    background: var(--accent-strong);
+    transform: translateY(-1px);
+  }
+
+  .btn--outline {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+  }
+
+  .btn--outline:hover {
+    background: var(--surface);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Matrix Layout */
+  .metrics-bar {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .subject-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .subject-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+
+  .subject-card__badge {
+    align-self: flex-start;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  .subject-card__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 20px 0;
+    line-height: 1.3;
+  }
+
+  .subject-card__data {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .data-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14.5px;
+  }
+
+  .data-row i, .data-row svg {
+    color: var(--ink-soft);
+    width: 16px;
+    text-align: center;
+  }
+
+  .data-row span {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .subject-card__footer {
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .subject-card__footer .btn {
+    width: 100%;
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--surface);
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+  }
+
+  .empty-state svg {
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .empty-state h3 {
+    font-size: 20px;
+    color: var(--ink);
+    margin: 0 0 8px 0;
+  }
+
+  .empty-state p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .page-header .btn {
+      width: 100%;
+    }
+    .filter-actions {
+      flex-direction: column-reverse;
+    }
+    .filter-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="view-wrapper">
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="page-header__content">
+      <h2>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        Subjects Ledger
+      </h2>
+      <p>Browse and manage all curriculum modules in the database.</p>
+    </div>
+    <a href="{{ url_for('subject_add') }}" class="btn btn--primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Add New Subject
+    </a>
+  </header>
+
+  <!-- Filter Dashboard -->
+  <section class="filter-panel">
+    <div class="filter-panel__header">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      Search Parameters
+    </div>
+    
+    <form method="post">
+      <div class="filter-grid">
+        
+        <div class="field-group">
+          <label for="subject_name">Subject Name</label>
+          <input 
+            type="text" 
+            id="subject_name"
+            name="subject_name" 
+            class="form-control"
+            placeholder="e.g. Data Structures"
+            value="{{ request.args.get('subject_name', '') }}">
+        </div>
+
+        <div class="field-group">
+          <label for="professor_name">Professor</label>
+          <input 
+            type="text" 
+            id="professor_name"
+            name="professor_name" 
+            class="form-control"
+            placeholder="e.g. Dr. Turing"
+            value="{{ request.args.get('professor_name', '') }}">
+        </div>
+
+        <div class="field-group">
+          <label for="subject_code">Subject Code</label>
+          <input 
+            type="text" 
+            id="subject_code"
+            name="subject_code" 
+            class="form-control"
+            placeholder="e.g. CS201"
+            value="{{ request.args.get('subject_code', '') }}">
+        </div>
+
+        <div class="field-group">
+          <label for="year">Academic Year</label>
+          <select name="year" id="year" class="form-control">
+            <option value="">All Years</option>
+            {% for year in subjects.years %}
+              <option value="{{ year }}" {% if request.args.get('year') == year|string %}selected{% endif %}>
+                Year {{ year }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label for="semester">Semester</label>
+          <select id="semester" name="semester" class="form-control">
+            <option value="">All Semesters</option>
+            {% for semester in subjects.semesters %}
+              <option value="{{ semester }}" {% if request.args.get('semester') == semester|string %}selected{% endif %}>
+                {% if semester == 1 %}
+                  Semester 1
+                {% elif semester == 2 %}
+                  Semester 2
+                {% elif semester == 3 %}
+                  Summer
+                {% else %}
+                  Semester {{ semester }}
+                {% endif %}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+      </div>
+
+      <div class="filter-actions">
+        <a href="{{ url_for('subject_list') }}" class="btn btn--outline">Clear Filters</a>
+        <button type="submit" class="btn btn--primary">
+          Apply Search
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Results Count -->
+  <div class="metrics-bar">
+    Showing {{ subjects.subjects|length }} matched record{{ '' if subjects.subjects|length == 1 else 's' }}
+  </div>
+
+  <!-- Cards Grid -->
+  {% if subjects.subjects %}
+    <div class="cards-grid">
+      {% for subject in subjects["subjects"].values() %}
+        <article class="subject-card">
+          
+          <div class="subject-card__badge">{{ subject.subject_code }}</div>
+          <h3 class="subject-card__title">{{ subject.subject_name }}</h3>
+          
+          <div class="subject-card__data">
+            <div class="data-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>{{ subject.professor_name or "no entered professor yet" }}</span>
+            </div>
+
+            <div class="data-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Year {{ subject.year }} • Sem {{ subject.semester }}</span>
+            </div>
+
+            <div class="data-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              <span>{{ subject.credits }} Credits</span>
+            </div>
+          </div>
+
+          <div class="subject-card__footer">
+            <a href="{{ url_for('subject_detail', subject_id=subject.get('id')) }}" class="btn btn--outline">
+              View Details
+            </a>
+          </div>
+
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <h3>No subjects found</h3>
+      <p>We couldn't find any curriculum records matching your current filter parameters. Try clearing the filters and searching again.</p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

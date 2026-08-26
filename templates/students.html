@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block title %}Student Directory — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Student Directory</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 32px; margin-bottom: 6px;">Peer Students</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 15px;">Connect with classmates, form study groups, and message fellow students.</p>
+    </div>
+  </div>
+
+  <!-- Filter Form -->
+  <form method="GET" action="{{ url_for('student_list') }}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto; gap: 12px; margin-bottom: 24px; background: var(--surface); padding: 16px; border-radius: var(--radius); border: 1px solid var(--border);">
+    <div class="field" style="margin-bottom: 0;">
+      <label for="year">Academic Year</label>
+      <select id="year" name="year">
+        <option value="">All Years</option>
+        <option value="1" {% if request.args.get('year') == '1' %}selected{% endif %}>Year 1 (Freshman)</option>
+        <option value="2" {% if request.args.get('year') == '2' %}selected{% endif %}>Year 2 (Sophomore)</option>
+        <option value="3" {% if request.args.get('year') == '3' %}selected{% endif %}>Year 3 (Junior)</option>
+        <option value="4" {% if request.args.get('year') == '4' %}selected{% endif %}>Year 4 (Senior)</option>
+      </select>
+    </div>
+
+    <div style="display: flex; align-items: flex-end;">
+      <button type="submit" class="btn btn--primary" style="height: 42px;">Filter Students</button>
+    </div>
+  </form>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    {% for s in students %}
+    <div class="card" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          {% if s.avatar %}
+            <img src="{{ s.avatar }}" class="avatar avatar--sm" style="width: 44px; height: 44px;" alt="">
+          {% else %}
+            <span class="avatar avatar--sm" style="width: 44px; height: 44px; font-size: 16px;">{{ s.name[0]|upper if s.name else 'S' }}</span>
+          {% endif %}
+          <div>
+            <h3 style="font-size: 17px; margin-bottom: 2px; color: var(--ink);">
+              <a href="{{ url_for('student_detail', student_id=s.id) }}">{{ s.name }}</a>
+            </h3>
+            <span class="mono" style="font-size: 12px; color: var(--ink-faint);">Year {{ s.current_year or 1 }}, Semester {{ s.current_semester or 1 }}</span>
+          </div>
+        </div>
+
+        {% if s.bio %}
+          <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 14px 0; line-height: 1.4;">{{ s.bio[:90] }}{% if s.bio|length > 90 %}...{% endif %}</p>
+        {% endif %}
+
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
+          <span class="chip" style="font-size: 12px; background: var(--surface);">{{ s.enrolled_count }} Enrolled Courses</span>
+          {% if s.average_gpa %}
+            <span class="chip" style="font-size: 12px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 600;">GPA {{ s.average_gpa }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border);">
+        <a href="{{ url_for('message_thread', other_user_id=s.id) }}" class="btn btn--ghost" style="padding: 6px 12px; font-size: 12.5px;">Message</a>
+        <a href="{{ url_for('student_detail', student_id=s.id) }}" class="btn btn--primary" style="padding: 6px 14px; font-size: 12.5px;">Profile &rarr;</a>
+      </div>
+    </div>
+    {% else %}
+    <div style="grid-column: 1 / -1; padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+      <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Students Found</div>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Try modifying your filter parameters.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

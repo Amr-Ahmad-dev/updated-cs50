@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Search Materials — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Material Search</span>
+
+  <div style="margin-bottom: 28px;">
+    <h1 style="font-size: 30px; margin-bottom: 6px;">Search Course Materials</h1>
+    <form method="GET" action="{{ url_for('search_materials_route') }}" style="display: flex; gap: 12px; max-width: 600px; margin-top: 16px;">
+      {% if subject_id %}<input type="hidden" name="subject_id" value="{{ subject_id }}">{% endif %}
+      <input type="text" name="q" value="{{ query }}" placeholder="Search documents, slides, summaries..." required autofocus style="flex: 1; padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: var(--bg); color: var(--ink);">
+      <button type="submit" class="btn btn--primary" style="padding: 12px 24px;">Search</button>
+    </form>
+  </div>
+
+  {% if results %}
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    {% for m in results %}
+    <div class="card" style="padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span class="chip" style="font-size: 11px;">{{ m.subject_code }}</span>
+          <span class="chip" style="font-size: 11px; background: var(--surface);">{{ m.material_type|capitalize }}</span>
+        </div>
+        <h3 style="font-size: 18px; margin: 0 0 4px 0; color: var(--ink);">{{ m.title }}</h3>
+        <span style="font-size: 13px; color: var(--ink-soft);">{{ m.description or '' }}</span>
+      </div>
+      <a href="{{ url_for('subject_materials', subject_id=m.subject_id) }}" class="btn btn--ghost" style="padding: 6px 14px; font-size: 13px;">View in Course &rarr;</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% elif query %}
+  <div style="padding: 36px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <p style="color: var(--ink-soft); margin: 0;">No materials found matching "{{ query }}".</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

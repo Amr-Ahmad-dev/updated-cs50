@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Faculty Directory — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Faculty Directory</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 32px; margin-bottom: 6px;">Professors &amp; Faculty</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 15px;">Discover instructors, department offices, taught subjects, and student ratings.</p>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <a href="{{ url_for('search_professors_route') }}" class="btn btn--ghost">Search Faculty</a>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+    {% for prof in professors %}
+    <div class="card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between; transition: transform var(--transition-fast);">
+      <div>
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          {% if prof.avatar %}
+            <img src="{{ prof.avatar }}" class="avatar avatar--sm" style="width: 48px; height: 48px;" alt="">
+          {% else %}
+            <span class="avatar avatar--sm" style="width: 48px; height: 48px; font-size: 18px;">{{ prof.name[0]|upper if prof.name else 'P' }}</span>
+          {% endif %}
+          
+          <div>
+            <h2 style="font-size: 18px; color: var(--ink); margin-bottom: 2px;">
+              <a href="{{ url_for('professor_detail', professor_id=prof.id) }}">{{ prof.name }}</a>
+            </h2>
+            <div style="font-size: 12.5px; color: var(--ink-soft);">{{ prof.department }}</div>
+          </div>
+        </div>
+
+        {% if prof.bio %}
+          <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 16px 0; line-height: 1.5;">{{ prof.bio[:120] }}{% if prof.bio|length > 120 %}...{% endif %}</p>
+        {% endif %}
+
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+          <span class="chip" style="font-size: 12px; background: var(--surface);">Office: {{ prof.office }}</span>
+          <span class="chip" style="font-size: 12px; background: var(--surface);">{{ prof.subject_count }} Courses</span>
+          {% if prof.rating %}
+            <span class="chip" style="font-size: 12px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 600;">★ {{ prof.rating }} / 5.0 ({{ prof.vote_count }})</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border);">
+        <a href="{{ url_for('message_thread', other_user_id=prof.id) }}" class="btn btn--ghost" style="padding: 6px 14px; font-size: 13px;">Message &rarr;</a>
+        <a href="{{ url_for('professor_detail', professor_id=prof.id) }}" class="btn btn--primary" style="padding: 6px 16px; font-size: 13px;">View Profile</a>
+      </div>
+    </div>
+    {% else %}
+    <div style="grid-column: 1 / -1; padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+      <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Professors Found</div>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Faculty accounts will appear here once registered.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

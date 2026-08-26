@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block title %}Prerequisites — {{ prerequisites.subject.code if prerequisites.subject else 'Subject' }}{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Academic Progression</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+        <span class="chip" style="font-weight: 600;">{{ prerequisites.subject.code }}</span>
+        <span class="mono" style="font-size: 13px; color: var(--ink-faint);">Year {{ prerequisites.subject.year }}, Term {{ prerequisites.subject.semester }}</span>
+      </div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">{{ prerequisites.subject.name }} Prerequisites</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Required foundational coursework and downstream subjects enabled by completing this course.</p>
+    </div>
+    <a href="{{ url_for('subject_detail', subject_id=subject_id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px;">
+    
+    <!-- Required Prerequisites -->
+    <div class="card" style="padding: 24px;">
+      <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 6px;">Required Prerequisites</h2>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 20px 0;">Courses that must be successfully passed prior to enrolling in this subject.</p>
+
+      {% if prerequisites.prerequisites %}
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        {% for p in prerequisites.prerequisites %}
+        <div style="padding: 14px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600; color: var(--ink);">
+              <span class="mono" style="color: var(--accent); margin-right: 6px;">{{ p.code }}</span>
+              {{ p.name }}
+            </div>
+            <span class="mono" style="font-size: 12px; color: var(--ink-faint);">Year {{ p.year }}, Term {{ p.semester }} · {{ p.credits }} Credits</span>
+          </div>
+          <a href="{{ url_for('subject_detail', subject_id=p.id) }}" class="btn btn--ghost" style="padding: 4px 10px; font-size: 12px;">Inspect</a>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="padding: 24px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+        <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">None — This is a foundational course with no entry prerequisites.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Unlocked Downstream Courses -->
+    <div class="card" style="padding: 24px;">
+      <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 6px;">Unlocked Courses</h2>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 20px 0;">Advanced subjects that require completion of this course.</p>
+
+      {% if prerequisites.unlocks %}
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        {% for u in prerequisites.unlocks %}
+        <div style="padding: 14px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-weight: 600; color: var(--ink);">
+              <span class="mono" style="color: var(--teal); margin-right: 6px;">{{ u.code }}</span>
+              {{ u.name }}
+            </div>
+            <span class="mono" style="font-size: 12px; color: var(--ink-faint);">Year {{ u.year }}, Term {{ u.semester }} · {{ u.credits }} Credits</span>
+          </div>
+          <a href="{{ url_for('subject_detail', subject_id=u.id) }}" class="btn btn--ghost" style="padding: 4px 10px; font-size: 12px;">Inspect</a>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="padding: 24px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+        <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">No downstream subjects currently declare this course as a mandatory prerequisite.</p>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Calendar & Events — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Academic Calendar</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 32px; margin-bottom: 6px;">Campus &amp; Academic Events</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 15px;">Upcoming milestones, exam schedules, registration periods, and deadlines.</p>
+    </div>
+    {% if session.get('authority', 1) >= 2 %}
+    <a href="{{ url_for('event_add') }}" class="btn btn--primary">+ Schedule Event</a>
+    {% endif %}
+  </div>
+
+  {% if events %}
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+    {% for e in events %}
+    <div class="card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span class="chip" style="font-weight: 600; {% if e.status == 'ongoing' %}background: var(--accent-soft); color: var(--accent-strong);{% elif e.status == 'completed' %}background: var(--surface);{% else %}background: var(--teal); color: #fff;{% endif %}">
+            {{ e.status|capitalize }}
+          </span>
+          <span class="mono" style="font-size: 12.5px; color: var(--ink-faint);">{{ e.event_date or 'TBA' }}</span>
+        </div>
+
+        <h3 style="font-size: 19px; margin-bottom: 8px; color: var(--ink);">
+          <a href="{{ url_for('event_detail', event_id=e.id) }}">{{ e.title }}</a>
+        </h3>
+
+        {% if e.subject_name %}
+          <div style="font-size: 13px; color: var(--teal); font-weight: 500; margin-bottom: 8px;">
+            Course: {{ e.subject_code }} - {{ e.subject_name }}
+          </div>
+        {% endif %}
+
+        <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 16px 0;">
+          {{ e.description or 'No details provided.' }}
+        </p>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid var(--border);">
+        {% if e.url %}
+          <a href="{{ e.url }}" target="_blank" rel="noopener noreferrer" style="font-size: 13px; color: var(--teal); font-weight: 500;">Link &rarr;</a>
+        {% else %}
+          <span></span>
+        {% endif %}
+        <a href="{{ url_for('event_detail', event_id=e.id) }}" class="btn btn--ghost" style="padding: 4px 12px; font-size: 12.5px;">Details &rarr;</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Upcoming Events</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Campus schedules and deadlines will appear here.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

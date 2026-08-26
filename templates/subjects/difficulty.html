@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Difficulty Breakdown — {{ subject.code }}{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Course Difficulty</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+        <span class="chip" style="font-weight: 600;">{{ subject.code }}</span>
+        <span class="mono" style="font-size: 13px; color: var(--ink-faint);">Year {{ subject.year }}, Term {{ subject.semester }}</span>
+      </div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">{{ subject.name }} Difficulty Analysis</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Student-reported difficulty metrics and workload expectations.</p>
+    </div>
+    <a href="{{ url_for('subject_detail', subject_id=subject.id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px;">
+    
+    <!-- Average Difficulty & Breakdown Card -->
+    <div class="card" style="padding: 24px;">
+      <span class="detail__label" style="margin-bottom: 8px; display: block;">Calculated Difficulty</span>
+      <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;">
+        <div style="font-family: var(--font-display); font-size: 44px; font-weight: 600; color: var(--ink); line-height: 1;">
+          {{ difficulty.average_difficulty }} <span style="font-size: 20px; color: var(--ink-faint);">/ 5.0</span>
+        </div>
+        <span style="font-size: 13px; color: var(--ink-soft);">({{ difficulty.total_votes }} votes)</span>
+      </div>
+
+      <!-- Difficulty Spectrum -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+        {% for item in difficulty.breakdown %}
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+            <span style="font-weight: 500; color: var(--ink);">Level {{ item.level }} — {{ item.label }}</span>
+            <span class="mono" style="color: var(--ink-soft);">{{ item.percentage }}% ({{ item.count }})</span>
+          </div>
+          <div style="height: 10px; background: var(--surface); border-radius: 99px; overflow: hidden;">
+            <div style="height: 100%; width: {{ item.percentage }}%; background: {% if item.level >= 4 %}var(--danger){% elif item.level == 3 %}var(--warning){% else %}var(--success){% endif %};"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Submit Difficulty Score Form -->
+    <div class="card" style="padding: 24px; background: var(--surface);">
+      <h2 style="font-size: 19px; color: var(--ink); margin-bottom: 6px;">Report Course Difficulty</h2>
+      <p style="color: var(--ink-soft); font-size: 13.5px; margin: 0 0 20px 0;">How challenging did you find the coursework and exams?</p>
+
+      <form method="POST" action="{{ url_for('subject_difficulty', subject_id=subject.id) }}">
+        <div class="field">
+          <label for="difficulty_choice">Select Difficulty Level</label>
+          <select id="difficulty_choice" name="difficulty" required>
+            <option value="1">1 — Very Easy (Minimal effort required)</option>
+            <option value="2">2 — Easy (Straightforward assignments)</option>
+            <option value="3" selected>3 — Moderate (Standard university workload)</option>
+            <option value="4">4 — Challenging (Heavy study and deep problem sets)</option>
+            <option value="5">5 — Very Hard (Demanding, advanced topics)</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--block" style="margin-top: 16px;">
+          Submit Difficulty Score
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

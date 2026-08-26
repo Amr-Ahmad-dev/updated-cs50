@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+{% block title %}Add Note — Ledger{% endblock %}
+
+{% block page_style %}
+<style>
+  .form-container {
+    max-width: 720px;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 6px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .page-header p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .note-form {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .form-control {
+    font-size: 14.5px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--ink);
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+    background: var(--bg-elevated);
+  }
+
+  textarea.form-control {
+    min-height: 220px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px 20px; font-size: 14.5px; font-weight: 600;
+    border-radius: var(--radius); cursor: pointer; transition: all var(--transition-fast);
+    text-decoration: none; border: 1px solid transparent;
+  }
+
+  .btn--primary { background: var(--accent); color: var(--accent-ink); }
+  .btn--primary:hover { background: var(--accent-strong); transform: translateY(-1px); }
+  .btn--ghost { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn--ghost:hover { background: var(--surface); }
+
+  .flash-alert {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+  }
+  .flash-alert--error {
+    background: color-mix(in srgb, #e53935 12%, transparent);
+    border-color: #e53935;
+    color: #e53935;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  
+  <div class="page-header">
+    <h1>Create a New <em>Note</em></h1>
+    <p>Write out personal study notes, reminders, or quick ideas directly to your ledger.</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-alert flash-alert--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form action="{{ url_for('note_add') }}" method="POST" class="note-form">
+    
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" class="form-control" value="{{ title|default('') }}" placeholder="e.g. Midterm Prep Summary" required autofocus>
+    </div>
+
+    <div class="form-group">
+      <label for="content">Note Content</label>
+      <textarea id="content" name="content" class="form-control" placeholder="Type or paste your note content here..." required>{{ content|default('') }}</textarea>
+    </div>
+
+    <div class="form-actions">
+      <a href="{{ url_for('my_notes') }}" class="btn btn--ghost">Cancel</a>
+      <button type="submit" class="btn btn--primary">Save Note</button>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

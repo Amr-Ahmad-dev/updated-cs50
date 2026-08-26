@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Event Management — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Event Oversight</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 28px; margin-bottom: 6px;">Manage Calendar Events</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Schedule campus events, exam periods, and official broadcasts.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('event_add') }}" class="btn btn--primary">+ Create New Event</a>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn--ghost">&larr; Dashboard</a>
+    </div>
+  </div>
+
+  {% if events %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for e in events %}
+    <div class="card" style="padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div style="flex: 1; min-width: 260px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+          <span class="chip" style="background: var(--teal); color: #fff;">{{ e.status|capitalize }}</span>
+          <span class="mono" style="font-size: 13px; color: var(--ink-faint);">{{ e.event_date or 'No date set' }}</span>
+        </div>
+        <h3 style="font-size: 18px; color: var(--ink); margin-bottom: 6px;">{{ e.title }}</h3>
+        <p style="font-size: 14px; color: var(--ink-soft); margin: 0 0 8px 0;">{{ e.description or 'No description' }}</p>
+        {% if e.url %}
+          <a href="{{ e.url }}" target="_blank" rel="noopener noreferrer" style="font-size: 13px; color: var(--teal); text-decoration: underline;">Open Link &rarr;</a>
+        {% endif %}
+      </div>
+
+      <div>
+        <a href="{{ url_for('event_detail', event_id=e.id) }}" class="btn btn--ghost" style="padding: 6px 14px;">View &rarr;</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Events Scheduled</div>
+    <p style="color: var(--ink-soft); margin: 0 0 16px 0; font-size: 14px;">Get started by posting an academic event or exam date.</p>
+    <a href="{{ url_for('event_add') }}" class="btn btn--primary">+ Add First Event</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

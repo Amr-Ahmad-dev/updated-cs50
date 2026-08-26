@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+{% block title %}Search Results — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Universal Search</span>
+
+  <div style="margin-bottom: 28px;">
+    <h1 style="font-size: 32px; margin-bottom: 8px;">Search Ledger</h1>
+    <p style="color: var(--ink-soft); margin: 0 0 20px 0; font-size: 15px;">Search across all subjects, course materials, instructors, and assignments.</p>
+
+    <!-- Search Input Form -->
+    <form method="GET" action="{{ url_for('search_global') }}" style="display: flex; gap: 12px; max-width: 680px;">
+      <input type="text" name="q" value="{{ query }}" placeholder="Search by course code, topic, professor, or material title..." required autofocus style="flex: 1; padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: var(--bg); color: var(--ink); font-size: 15px;">
+      <button type="submit" class="btn btn--primary" style="padding: 12px 24px;">Search</button>
+    </form>
+  </div>
+
+  {% if query %}
+    <div style="font-size: 14.5px; color: var(--ink-soft); margin-bottom: 24px;">
+      Found <strong>{{ results.total_results }}</strong> results for <span class="mono" style="color: var(--ink); font-weight: 600;">"{{ query }}"</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 32px;">
+      
+      <!-- Subject Results -->
+      {% if results.subjects %}
+      <div>
+        <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span>Courses</span>
+          <span class="chip" style="font-size: 11px;">{{ results.subjects|length }}</span>
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+          {% for s in results.subjects %}
+          <div class="card" style="padding: 18px;">
+            <span class="chip" style="margin-bottom: 6px; font-weight: 600;">{{ s.code }}</span>
+            <h3 style="font-size: 17px; margin-bottom: 4px;">
+              <a href="{{ url_for('subject_detail', subject_id=s.id) }}">{{ s.name }}</a>
+            </h3>
+            <span style="font-size: 13px; color: var(--ink-soft);">Year {{ s.year }}, Term {{ s.semester }} · {{ s.credits }} Credits</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Material Results -->
+      {% if results.materials %}
+      <div>
+        <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span>Course Materials</span>
+          <span class="chip" style="font-size: 11px;">{{ results.materials|length }}</span>
+        </h2>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          {% for m in results.materials %}
+          <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <span class="chip" style="font-size: 11px; margin-bottom: 4px;">{{ m.subject_code }}</span>
+              <h4 style="font-size: 16px; margin: 0; color: var(--ink);">{{ m.title }}</h4>
+              <span style="font-size: 13px; color: var(--ink-soft);">{{ m.material_type|capitalize }} · {{ m.description or '' }}</span>
+            </div>
+            <a href="{{ url_for('subject_materials', subject_id=m.subject_id) }}" class="btn btn--ghost" style="padding: 6px 14px; font-size: 12.5px;">View in Course &rarr;</a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Faculty Results -->
+      {% if results.professors %}
+      <div>
+        <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span>Faculty &amp; Instructors</span>
+          <span class="chip" style="font-size: 11px;">{{ results.professors|length }}</span>
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+          {% for p in results.professors %}
+          <div class="card" style="padding: 18px; display: flex; align-items: center; gap: 14px;">
+            <span class="avatar avatar--sm">{{ p.name[0]|upper if p.name else 'P' }}</span>
+            <div>
+              <h3 style="font-size: 16.5px; margin: 0;">
+                <a href="{{ url_for('professor_detail', professor_id=p.p_id) }}">{{ p.name }}</a>
+              </h3>
+              <span style="font-size: 12.5px; color: var(--ink-soft);">{{ p.department or 'Faculty' }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Assignment Results -->
+      {% if results.assignments %}
+      <div>
+        <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+          <span>Assignments</span>
+          <span class="chip" style="font-size: 11px;">{{ results.assignments|length }}</span>
+        </h2>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          {% for a in results.assignments %}
+          <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <span class="chip" style="font-size: 11px; margin-bottom: 4px;">{{ a.subject_code }}</span>
+              <h4 style="font-size: 16px; margin: 0; color: var(--ink);">{{ a.title }}</h4>
+            </div>
+            <a href="{{ url_for('assignment_detail', subject_id=a.subject_id, assignment_id=a.id) }}" class="btn btn--ghost" style="padding: 6px 14px; font-size: 12.5px;">View Details &rarr;</a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if results.total_results == 0 %}
+      <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+        <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Matches Found</div>
+        <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Try searching for a course code like "CS50", a subject name, or faculty member.</p>
+      </div>
+      {% endif %}
+
+    </div>
+  {% else %}
+    <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+      <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">Search Platform</div>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Type your search query above to browse the campus catalog.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

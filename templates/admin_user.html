@@ -1,0 +1,161 @@
+{% extends "layout.html" %}
+{% block title %}User Inspection #{{ user.id }} — Ledger{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- User Header & Details Card -->
+  <div class="record record--profile">
+    <span class="record__tab">User Record #{{ user.id }}</span>
+    
+    <div class="profile-head">
+      {% if user.avatar %}
+        <img src="{{ user.avatar }}" class="avatar avatar--lg" alt="">
+      {% else %}
+        <span class="avatar avatar--lg">{{ user.name[0]|upper if user.name else 'U' }}</span>
+      {% endif %}
+
+      <div class="profile-heading">
+        <div class="profile-heading__eyebrow">
+          {% if user.authority == 7 %}Faculty Member{% elif user.authority >= 2 %}Staff Administrator{% else %}Student Account{% endif %}
+        </div>
+        <h1 class="profile-heading__name">{{ user.name }}</h1>
+        <div class="profile-heading__term">
+          <span class="mono">{{ user.email }}</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{{ url_for('admin_users') }}" class="btn btn--ghost">&larr; User Directory</a>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail">
+        <span class="detail__label">Authority Level</span>
+        <span class="detail__value mono">
+          Tier {{ user.authority }} 
+          {% if user.authority == 7 %}(Professor)
+          {% elif user.authority >= 5 %}(Senior Admin)
+          {% elif user.authority >= 2 %}(Admin)
+          {% else %}(Student){% endif %}
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Account Standing</span>
+        <span class="detail__value">
+          {% if user.state == 2 %}
+            <span class="chip" style="background: var(--danger-soft); color: var(--danger); border-color: var(--danger);">BANNED</span>
+          {% elif user.state == 1 %}
+            <span class="chip" style="background: var(--warning-soft); color: var(--warning); border-color: var(--warning);">WARNED ({{ user.warning_count }} warnings)</span>
+          {% else %}
+            <span class="chip" style="background: var(--success-soft); color: var(--success);">ACTIVE</span>
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Total Warnings</span>
+        <span class="detail__value mono">{{ user.warning_count }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Approval Status</span>
+        <span class="detail__value">
+          {% if user.approved == 1 %}<span style="color: var(--success);">Approved</span>{% else %}<span style="color: var(--warning);">Pending Review</span>{% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Moderation Actions Section -->
+  {% if user.authority != 7 and session.get('authority', 1) > user.authority %}
+  <div class="record" style="padding: 32px;">
+    <span class="record__tab">Moderation Actions</span>
+    <h2 style="font-size: 20px; margin-bottom: 8px;">Enforce Account Rules</h2>
+    <p style="color: var(--ink-soft); font-size: 14px; margin-bottom: 24px;">
+      Actions taken here are logged in the audit trail and immediately notify the student.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <!-- Issue Warning Card -->
+      <div class="card" style="padding: 20px;">
+        <h3 style="font-size: 16px; margin-bottom: 10px; color: var(--warning);">Issue Formal Warning</h3>
+        <form method="POST" action="{{ url_for('moderation_warn', user_id=user.id) }}">
+          <div class="field" style="margin-bottom: 12px;">
+            <label for="warn_reason">Reason for Warning</label>
+            <input type="text" id="warn_reason" name="reason" placeholder="e.g. Inappropriate material upload" required>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block" style="background: var(--warning); color: #fff;">Issue Warning</button>
+        </form>
+      </div>
+
+      <!-- Ban / Unban Card -->
+      <div class="card" style="padding: 20px;">
+        {% if user.state == 2 %}
+          <h3 style="font-size: 16px; margin-bottom: 10px; color: var(--success);">Restore Account</h3>
+          <p style="font-size: 13.5px; color: var(--ink-soft); margin-bottom: 16px;">This user is currently banned from accessing the platform.</p>
+          <form method="POST" action="{{ url_for('moderation_unban', user_id=user.id) }}">
+            <button type="submit" class="btn btn--primary btn--block" style="background: var(--success); color: #fff;">Unban &amp; Restore</button>
+          </form>
+        {% else %}
+          <h3 style="font-size: 16px; margin-bottom: 10px; color: var(--danger);">Suspend Account (Ban)</h3>
+          <form method="POST" action="{{ url_for('moderation_ban', user_id=user.id) }}">
+            <div class="field" style="margin-bottom: 12px;">
+              <label for="ban_reason">Reason for Suspension</label>
+              <input type="text" id="ban_reason" name="reason" placeholder="e.g. Repeated platform rule violations" required>
+            </div>
+            <button type="submit" class="btn btn--primary btn--block" style="background: var(--danger); color: #fff;">Ban Account</button>
+          </form>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+  {% elif user.authority == 7 %}
+  <div class="record" style="padding: 24px; background: var(--surface);">
+    <div style="font-size: 14px; color: var(--ink-soft);">
+      <strong>Faculty Exemption:</strong> Professor accounts are immune from student/staff moderation actions.
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Moderation History Log -->
+  <div class="record" style="padding: 32px;">
+    <span class="record__tab">User History</span>
+    <h2 style="font-size: 20px; margin-bottom: 16px;">Moderation Audit Trail</h2>
+    
+    {% if user.logs %}
+      <table>
+        <thead>
+          <tr>
+            <th style="padding: 10px 14px;">Date</th>
+            <th style="padding: 10px 14px;">Action</th>
+            <th style="padding: 10px 14px;">Enacted By</th>
+            <th style="padding: 10px 14px;">Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in user.logs %}
+          <tr>
+            <td style="padding: 12px 14px; font-size: 13px;" class="mono">{{ log.created_at }}</td>
+            <td style="padding: 12px 14px;">
+              <span class="chip" style="{% if log.action == 'ban' %}background: var(--danger-soft); color: var(--danger);{% elif log.action == 'warn' %}background: var(--warning-soft); color: var(--warning);{% else %}background: var(--success-soft); color: var(--success);{% endif %}">
+                {{ log.action|upper }}
+              </span>
+            </td>
+            <td style="padding: 12px 14px;">{{ log.actor_name or log.actor_email }}</td>
+            <td style="padding: 12px 14px; color: var(--ink-soft);">{{ log.reason or 'No reason provided' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p style="color: var(--ink-faint); font-style: italic; margin: 0;">Clean record: no moderation actions have ever been issued against this user.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

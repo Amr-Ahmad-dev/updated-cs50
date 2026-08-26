@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Messages — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Direct Inbox</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 32px; margin-bottom: 6px;">Direct Messages</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 15px;">Private conversations with classmates, professors, and administrative staff.</p>
+    </div>
+  </div>
+
+  {% if conversations %}
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    {% for conv in conversations %}
+    <a href="{{ url_for('message_thread', other_user_id=conv.other_user.id) }}" class="card" style="padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; transition: all var(--transition-fast);">
+      <div style="display: flex; align-items: center; gap: 16px; flex: 1; min-width: 220px;">
+        {% if conv.other_user.avatar %}
+          <img src="{{ conv.other_user.avatar }}" class="avatar avatar--sm" style="width: 46px; height: 46px;" alt="">
+        {% else %}
+          <span class="avatar avatar--sm" style="width: 46px; height: 46px; font-size: 17px;">{{ conv.other_user.name[0]|upper if conv.other_user.name else 'U' }}</span>
+        {% endif %}
+
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+            <span style="font-size: 16.5px; font-weight: 600; color: var(--ink);">{{ conv.other_user.name }}</span>
+            <span class="mono" style="font-size: 12px; color: var(--ink-faint);">{{ conv.other_user.email }}</span>
+          </div>
+
+          {% if conv.last_message %}
+            <p style="font-size: 14px; color: var(--ink-soft); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 480px;">
+              {{ conv.last_message.content }}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        {% if conv.unread_count > 0 %}
+          <span class="chip" style="background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 12px;">{{ conv.unread_count }} NEW</span>
+        {% endif %}
+        <span class="mono" style="font-size: 12px; color: var(--ink-faint);">{{ conv.last_message.created_at if conv.last_message else '' }}</span>
+        <span style="color: var(--ink-faint); font-size: 18px;">&rarr;</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 56px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Active Conversations</div>
+    <p style="color: var(--ink-soft); margin: 0 0 16px 0; font-size: 14px;">Start a conversation by clicking Message on any student or professor profile.</p>
+    <a href="{{ url_for('professor_list') }}" class="btn btn--primary" style="margin-right: 8px;">Find Professors</a>
+    <a href="{{ url_for('student_list') }}" class="btn btn--ghost">Find Classmates</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

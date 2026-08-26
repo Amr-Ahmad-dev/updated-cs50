@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block title %}Discussion Board — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Course Discussion</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">Subject Discussion Board</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Ask questions, discuss lectures, and collaborate on assignments with classmates.</p>
+    </div>
+    <a href="{{ url_for('subject_detail', subject_id=subject_id) }}" class="btn btn--ghost">&larr; Subject Overview</a>
+  </div>
+
+  <!-- New Post Creation Form -->
+  <div class="card" style="padding: 24px; margin-bottom: 32px; background: var(--surface);">
+    <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--ink);">Start a Discussion Topic</h2>
+    <form method="POST" action="{{ url_for('subject_discussion', subject_id=subject_id) }}">
+      <div class="field">
+        <label for="title">Topic / Title</label>
+        <input type="text" id="title" name="title" placeholder="e.g. Question regarding Problem Set 3" required>
+      </div>
+
+      <div class="field">
+        <label for="content">Discussion Content</label>
+        <textarea id="content" name="content" rows="3" placeholder="Share your thoughts or question..." required></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="submit" class="btn btn--primary">Post to Board</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Discussion Threads List -->
+  <h2 style="font-size: 22px; margin-bottom: 16px;">Community Topics ({{ posts|length }})</h2>
+  
+  {% if posts %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for p in posts %}
+    <div class="card" style="padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          {% if p.author_avatar %}
+            <img src="{{ p.author_avatar }}" class="avatar avatar--sm" alt="">
+          {% else %}
+            <span class="avatar avatar--sm">{{ p.author_name[0]|upper if p.author_name else 'U' }}</span>
+          {% endif %}
+          <div>
+            <strong style="color: var(--ink);">{{ p.author_name or p.author_email }}</strong>
+            <span class="mono" style="font-size: 12px; color: var(--ink-faint); margin-left: 8px;">{{ p.created_at }}</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size: 19px; color: var(--ink); margin-bottom: 10px;">{{ p.title }}</h3>
+      <div style="font-size: 14.5px; line-height: 1.6; color: var(--ink-soft); white-space: pre-wrap;">{{ p.content }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Discussion Posts Yet</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Be the first to ask a question or initiate a discussion on this course!</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

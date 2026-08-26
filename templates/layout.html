@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Ledger{% endblock %}</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+{% block extra_head %}{% endblock %}
+
+<script>
+  // Theme Initialization in <head> to prevent Flash of Unstyled Content (FOUC)
+  (function () {
+    try {
+      var stored = localStorage.getItem('ledger-theme');
+      var preferred = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', preferred);
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+  /* ============================================================
+     THEME TOKENS & DESIGN VARIABLES
+     ============================================================ */
+  :root {
+    /* Typography */
+    --font-display: 'Fraunces', 'Iowan Old Style', serif;
+    --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+
+    /* Layout & Animation */
+    --radius-sm: 4px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --nav-h: 68px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 0.15s var(--ease);
+    --transition-base: 0.25s var(--ease);
+  }
+
+  /* Light Theme Colors */
+  html[data-theme="light"] {
+    --bg: #EEF1EE;
+    --bg-elevated: #FFFFFF;
+    --surface: #E3E8E2;
+    --surface-hover: #D9DFD7;
+    --ink: #171B18;
+    --ink-soft: #565F5A;
+    --ink-faint: #8B948E;
+    --border: #D2D8CF;
+    --border-strong: #B7C0B3;
+    
+    --accent: #A8720F;
+    --accent-strong: #8A5D0C;
+    --accent-soft: #F3E3C6;
+    --accent-ink: #2B1D05;
+    
+    --teal: #2E5F6E;
+    --success: #3F6C4E;
+    --success-soft: #DEEBE1;
+    --danger: #A2402A;
+    --danger-soft: #F3DDD5;
+    --warning: #93690F;
+    --warning-soft: #F1E4C4;
+    --info: #2E5F6E;
+    --info-soft: #DCE7E9;
+    
+    --shadow-sm: 0 1px 2px rgba(23,27,24,0.06);
+    --shadow-md: 0 4px 12px -4px rgba(23,27,24,0.12), 0 8px 24px -8px rgba(23,27,24,0.08);
+  }
+
+  /* Dark Theme Colors */
+  html[data-theme="dark"] {
+    --bg: #12161C;
+    --bg-elevated: #1A2029;
+    --surface: #1F2631;
+    --surface-hover: #29323F;
+    --ink: #ECEFEC;
+    --ink-soft: #A7B0AC;
+    --ink-faint: #6C766F;
+    --border: #2A3340;
+    --border-strong: #3A4657;
+    
+    --accent: #E3AB4C;
+    --accent-strong: #F0BC63;
+    --accent-soft: #3A2E15;
+    --accent-ink: #17120A;
+    
+    --teal: #7FB2C4;
+    --success: #7EBB92;
+    --success-soft: #1E2E23;
+    --danger: #E38F73;
+    --danger-soft: #33221C;
+    --warning: #E3C065;
+    --warning-soft: #332B16;
+    --info: #7FB2C4;
+    --info-soft: #1B2A2E;
+    
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-md: 0 4px 12px -4px rgba(0,0,0,0.5), 0 12px 28px -8px rgba(0,0,0,0.6);
+  }
+
+  /* ============================================================
+     BASE & RESET
+     ============================================================ */
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color var(--transition-base), color var(--transition-base);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  a { color: inherit; text-decoration: none; transition: color var(--transition-fast); }
+  h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; margin: 0; letter-spacing: -0.015em; line-height: 1.2; }
+  code, .mono { font-family: var(--font-mono); }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ============================================================
+     LAYOUT & NAVIGATION
+     ============================================================ */
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: background-color var(--transition-base), border-color var(--transition-base);
+  }
+
+  .nav {
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .nav__brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .nav__brand-mark {
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 2px;
+    transform: rotate(45deg);
+    transition: transform var(--transition-base);
+  }
+  .nav__brand:hover .nav__brand-mark { transform: rotate(135deg); }
+
+  .nav__brand-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .nav__links { display: none; align-items: center; gap: 4px; flex: 1; }
+  @media (min-width: 860px) { .nav__links { display: flex; } }
+
+  .nav__link {
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+  .nav__link:hover { background: var(--surface); color: var(--ink); }
+  .nav__link.is-active { color: var(--ink); background: var(--surface); }
+
+  .nav__spacer { flex: 1; }
+  .nav__actions { display: flex; align-items: center; gap: 8px; }
+
+  .nav__mobile-toggle { display: inline-flex; }
+  @media (min-width: 860px) { .nav__mobile-toggle { display: none; } }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 24px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .mobile-menu.is-open { display: flex; animation: slide-down 0.2s ease-out; }
+  @keyframes slide-down { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  @media (min-width: 860px) { .mobile-menu { display: none !important; } }
+  .mobile-menu .nav__link { padding: 12px 14px; }
+
+  /* ============================================================
+     COMPONENTS: BUTTONS & ICONS
+     ============================================================ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  .btn:active { transform: translateY(1px); }
+  
+  .btn--primary { background: var(--ink); color: var(--bg); box-shadow: var(--shadow-sm); }
+  .btn--primary:hover { background: var(--accent); color: var(--accent-ink); box-shadow: var(--shadow-md); }
+  
+  .btn--ghost { background: transparent; color: var(--ink); border-color: var(--border-strong); }
+  .btn--ghost:hover { background: var(--surface); border-color: var(--ink-soft); }
+  
+  .btn--block { width: 100%; }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px; height: 38px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  .icon-btn:hover { background: var(--surface); color: var(--ink); }
+  .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.7; }
+  
+  .icon-btn--dot { position: relative; }
+  .icon-btn--dot::after {
+    content: "";
+    position: absolute; top: 8px; right: 8px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  /* ============================================================
+     COMPONENTS: AVATAR SYSTEM
+     ============================================================ */
+  .avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    border: 1px solid var(--border);
+    object-fit: cover;
+    flex-shrink: 0;
+    transition: border-color var(--transition-fast);
+  }
+  a.avatar:hover { border-color: var(--ink-soft); }
+
+  .avatar--sm { width: 36px; height: 36px; font-size: 13px; }
+  .avatar--lg { width: 88px; height: 88px; font-size: 32px; border-width: 2px; }
+
+  /* ============================================================
+     FLOATING CARDS, OVERLAYS & CONTAINER SURFACES
+     (Ensures child pages dark-adapt seamlessly)
+     ============================================================ */
+  /* Generic Floating Cards & Containers */
+  .record,
+  .floating-card,
+  .subject-card,
+  .card {
+    position: relative;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-base), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  
+  .record:hover,
+  .floating-card:hover,
+  .subject-card:hover,
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+
+  .record__tab {
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    padding: 4px 12px 5px;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+  }
+  html[data-theme="dark"] .record__tab { background: var(--accent); color: var(--accent-ink); }
+
+  /* Generic Table Formatting inside Floating Containers */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--ink);
+  }
+
+  table th {
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table td {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-elevated);
+    transition: background-color var(--transition-fast);
+  }
+
+  table tr:hover td {
+    background: var(--surface);
+  }
+
+  /* Chips & Tags */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+    transition: background-color var(--transition-fast);
+  }
+  .chip:hover { background: var(--surface-hover); }
+  
+  .chip--empty {
+    background: transparent;
+    border-style: dashed;
+    color: var(--ink-faint);
+    font-family: var(--font-body);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* ============================================================
+     PROFILE & DETAILS LAYOUT UTILITIES
+     ============================================================ */
+  .record--profile { padding: 36px 32px 32px; margin-bottom: 24px; }
+  
+  .profile-head { display: flex; align-items: flex-end; gap: 24px; margin-bottom: 36px; flex-wrap: wrap; }
+  
+  .profile-avatar-wrapper { position: relative; }
+  .profile-avatar__edit {
+    position: absolute;
+    bottom: 0; right: -4px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--ink); color: var(--bg);
+    border: 2px solid var(--bg-elevated);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+  }
+  .profile-avatar__edit:hover { background: var(--accent); color: var(--accent-ink); transform: scale(1.05); }
+  .profile-avatar__edit svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .profile-avatar__input { display: none; }
+
+  .profile-heading { flex: 1; min-width: 200px; }
+  .profile-heading__eyebrow {
+    font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 6px;
+  }
+  .profile-heading__name { font-size: 32px; line-height: 1.1; }
+  .profile-heading__term { margin-top: 8px; font-size: 14.5px; color: var(--ink-soft); }
+  .profile-heading__term .mono { color: var(--ink); font-weight: 600; }
+
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 28px; }
+  .detail { display: flex; flex-direction: column; gap: 6px; }
+  .detail__label, .section-label {
+    font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .section-label { margin-bottom: 14px; display: block; }
+  .detail__value { font-size: 15.5px; color: var(--ink); font-weight: 500; }
+  .detail__value--empty { color: var(--ink-faint); font-weight: 400; font-style: italic; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* ============================================================
+     FORM ELEMENTS
+     ============================================================ */
+  .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .field label {
+    font-size: 12.5px; font-weight: 600; color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .field input, .field select, .field textarea {
+    font-family: var(--font-body); font-size: 15px;
+    padding: 12px 14px; border-radius: var(--radius);
+    border: 1px solid var(--border-strong);
+    background: var(--bg); color: var(--ink);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+    width: 100%;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+  .field__hint, .field-note { font-size: 12.5px; color: var(--ink-faint); }
+  .field__row { display: flex; justify-content: space-between; align-items: baseline; }
+  .field__row a { font-size: 13px; color: var(--teal); font-weight: 600; }
+  .field__row a:hover { text-decoration: underline; }
+
+  /* ============================================================
+     FLASH MESSAGES
+     ============================================================ */
+  .flashes { max-width: 1080px; margin: 24px auto 0; padding: 0 24px; display: flex; flex-direction: column; gap: 10px; }
+  .flash {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px; border-radius: var(--radius);
+    font-size: 14px; font-weight: 500;
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-sm);
+    animation: flash-in 0.4s var(--ease);
+  }
+  @keyframes flash-in { from { opacity: 0; transform: translateY(-8px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  
+  .flash--success { background: var(--success-soft); color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); }
+  .flash--danger  { background: var(--danger-soft);  color: var(--danger);  border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+  .flash--warning { background: var(--warning-soft); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
+  .flash--info    { background: var(--info-soft);    color: var(--info);    border-color: color-mix(in srgb, var(--info) 30%, transparent); }
+  .flash__dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer {
+    margin-top: 80px;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--ink-faint);
+    font-size: 13px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono);
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: border-color var(--transition-base);
+  }
+</style>
+{% block page_style %}{% endblock %}
+</head>
+<body>
+
+<header class="header">
+  <nav class="nav">
+    <button class="icon-btn nav__mobile-toggle" id="mobileToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+    </button>
+
+    <a href="{{ url_for('home') if session.get('user_id') else url_for('login') }}" class="nav__brand">
+      <span class="nav__brand-mark"></span>
+      student
+      <span class="nav__brand-sub">flow ed.</span>
+    </a>
+
+    {% if session.get('user_id') %}
+    <div class="nav__links">
+      <a class="nav__link" href="{{ url_for('home') }}">Home</a>
+      <a class="nav__link" href="{{ url_for('subject_list') }}">Subjects</a>
+      <a class="nav__link" href="{{ url_for('favorite_list') }}">Favorites</a>
+      <a class="nav__link" href="{{ url_for('my_notes') }}">My_notes</a>
+      {% if Features is defined and Features.ENABLE_EVENTS %}<a class="nav__link" href="{{ url_for('event_list') }}">Calendar</a>{% endif %}
+      {% if session.get('authority') == 7 %}<a class="nav__link" href="{{ url_for('professor_dashboard') }}">Professor tools</a>{% endif %}
+      {% if session.get('authority') and session.get('authority') >= 2 %}<a class="nav__link" href="{{ url_for('admin_dashboard') }}">Admin</a>{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="nav__spacer"></div>
+
+    <div class="nav__actions">
+      {% if session.get('user_id') %}
+        <a class="icon-btn" href="{{ url_for('home') }}" aria-label="Search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+        </a>
+        <a class="icon-btn icon-btn--dot" href="{{ url_for('notification_list') }}" aria-label="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z" stroke-linejoin="round"/><path d="M10 20a2 2 0 0 0 4 0" stroke-linecap="round"/></svg>
+        </a>
+      {% endif %}
+
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">
+        <svg id="iconSun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19v2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M2.5 12h2.4M19 12h2.4M4.9 19l1.7-1.7M17.4 6.6l1.7-1.7" stroke-linecap="round"/></svg>
+        <svg id="iconMoon" viewBox="0 0 24 24" style="display:none"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" stroke-linejoin="round"/></svg>
+      </button>
+
+      {% set them = session.get('name', '') if session.get('name') else session.get('email', '').split('@')[0] %}
+      
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('profile_view') }}" title="{{ session.get('email','') }}">
+          {% if session.get('avatar') %}  
+            <img class="avatar avatar--sm" src="{{ session.get('avatar') }}" alt="">
+          {% else %}
+            <span class="avatar avatar--sm">{{ them[0]|upper }}</span>
+          {% endif %}
+        </a>
+        <a href="{{ url_for('logout') }}" class="btn btn--ghost" style="padding: 8px 16px;">Log out</a>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="btn btn--ghost">Log in</a>
+        <a href="{{ url_for('register') }}" class="btn btn--primary">Sign up</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  {% if session.get('user_id') %}
+  <div class="mobile-menu" id="mobileMenu">
+    <a class="nav__link" href="{{ url_for('home') }}">Home</a>
+    <a class="nav__link" href="{{ url_for('subject_list') }}">Subjects</a>
+    <a class="nav__link" href="{{ url_for('favorite_list') }}">Favorites</a>
+    <a class="nav__link" href="{{ url_for('my_notes') }}">My notes</a>
+    {% if session.get('authority') == 7 %}<a class="nav__link" href="{{ url_for('professor_dashboard') }}">Professor tools</a>{% endif %}
+    {% if session.get('authority') and session.get('authority') >= 2 %}<a class="nav__link" href="{{ url_for('admin_dashboard') }}">Admin</a>{% endif %}
+  </div>
+  {% endif %}
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flashes">
+    {% for category, message in messages %}
+    <div class="flash flash--{{ category }}"><span class="flash__dot"></span>{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<main class="{% block main_class %}container{% endblock %}" {% block main_style %}style="padding-top: 32px; padding-bottom: 32px;"{% endblock %}>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <span>Ledger — a student's own record</span>
+  <span class="mono">{{ session.get('email', 'signed out') }}</span>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var sun = document.getElementById('iconSun');
+    var moon = document.getElementById('iconMoon');
+
+    function syncIcons() {
+      var isDark = root.getAttribute('data-theme') === 'dark';
+      if (sun) sun.style.display = isDark ? 'none' : 'block';
+      if (moon) moon.style.display = isDark ? 'block' : 'none';
+    }
+    
+    syncIcons();
+
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', function () {
+        var current = root.getAttribute('data-theme');
+        var next = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        syncIcons();
+        try { localStorage.setItem('ledger-theme', next); } catch (e) {}
+      });
+    }
+
+    var mobileToggle = document.getElementById('mobileToggle');
+    var mobileMenu = document.getElementById('mobileMenu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', function () {
+        var open = mobileMenu.classList.toggle('is-open');
+        mobileToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+  })();
+</script>
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

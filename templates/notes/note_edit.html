@@ -1,0 +1,225 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Note
+{% endblock %}
+
+{% block content %}
+<style>
+    .edit-note-wrapper {
+        max-width: 760px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .edit-note-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e9ecef;
+        overflow: hidden;
+    }
+
+    .edit-note-header {
+        padding: 1.5rem 2rem;
+        background: #ffffff;
+        border-bottom: 1px solid #f1f3f5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .edit-note-title {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #212529;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .note-id-badge {
+        background-color: #f1f3f5;
+        color: #495057;
+        font-size: 0.825rem;
+        font-family: monospace;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .edit-note-body {
+        padding: 2rem;
+    }
+
+    .form-group-custom {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label-custom {
+        display: block;
+        font-size: 0.775rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+
+    .input-custom, .textarea-custom {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        color: #212529;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        transition: all 0.2s ease-in-out;
+        box-sizing: border-box;
+    }
+
+    .input-custom:focus, .textarea-custom:focus {
+        outline: none;
+        background-color: #ffffff;
+        border-color: #4d90fe;
+        box-shadow: 0 0 0 4px rgba(77, 144, 254, 0.15);
+    }
+
+    .textarea-custom {
+        resize: vertical;
+        min-height: 220px;
+        line-height: 1.6;
+    }
+
+    .edit-note-footer {
+        padding-top: 1rem;
+        border-top: 1px solid #f1f3f5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-cancel {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1.25rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-cancel:hover {
+        background-color: #e9ecef;
+        color: #343a40;
+    }
+
+    .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #ffffff;
+        background-color: #0d6efd;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+        transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #0b5ed7;
+        box-shadow: 0 6px 16px rgba(13, 110, 253, 0.35);
+        transform: translateY(-1px);
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .back-link:hover {
+        color: #0d6efd;
+    }
+</style>
+
+<div class="edit-note-wrapper">
+    <a href="/my-notes" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Back to My Notes
+    </a>
+
+    <div class="edit-note-card">
+        <div class="edit-note-header">
+            <h1 class="edit-note-title">
+                <svg width="22" height="22" viewBox="0 0 16 16" fill="#0d6efd">
+                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9.000a.5.5 0 0 0-.121.196l-1 4a.5.5 0 0 0 .606.606l4-1a.5.5 0 0 0 .196-.12l6.5-6.5z"/>
+                </svg>
+                Edit Note
+            </h1>
+        </div>
+
+        <div class="edit-note-body">
+            <form action="/note/{{ note.id }}/edit" method="POST">
+                
+                <!-- Title Field -->
+                <div class="form-group-custom">
+                    <label for="title" class="form-label-custom">Title</label>
+                    <input type="text" 
+                           id="title" 
+                           name="title" 
+                           class="input-custom" 
+                           value="{{ note.title | default('') }}" 
+                           placeholder="Enter note title..." 
+                           required>
+                </div>
+
+                <!-- Content Field -->
+                <div class="form-group-custom">
+                    <label for="content" class="form-label-custom">Note Content</label>
+                    <textarea id="content" 
+                              name="content" 
+                              class="textarea-custom" 
+                              placeholder="Write your note content here..." 
+                              required>{{ note.content | default('') }}</textarea>
+                </div>
+
+                <!-- Footer Buttons -->
+                <div class="edit-note-footer">
+                    <a href="/my-notes" class="btn-cancel">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                        Cancel
+                    </a>
+                    
+                    <button type="submit" class="btn-submit">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

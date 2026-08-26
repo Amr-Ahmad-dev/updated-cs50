@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Material Approvals — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Pending Uploads</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 28px; margin-bottom: 6px;">Material Approval Queue</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Screen student notes, slides, and learning assets before publishing them to the subject repository.</p>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn--ghost">&larr; Back to Dashboard</a>
+  </div>
+
+  {% if pending %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for m in pending %}
+    <div class="card" style="padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div style="flex: 1; min-width: 260px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+          <span class="chip" style="font-weight: 600;">{{ m.subject_code or 'Subject' }}</span>
+          <span class="chip" style="background: var(--surface);">{{ m.material_type|capitalize }}</span>
+          <span class="chip" style="background: var(--accent-soft); color: var(--accent-strong);">{{ m.content_type|capitalize }}</span>
+        </div>
+        <h2 style="font-size: 20px; margin-bottom: 6px; color: var(--ink);">{{ m.title }}</h2>
+        <p style="font-size: 14px; color: var(--ink-soft); margin: 0 0 12px 0;">{{ m.description or 'No description provided.' }}</p>
+        
+        {% if m.file_path %}
+          <div style="margin-bottom: 12px;">
+            <a href="{{ m.file_path }}" target="_blank" rel="noopener noreferrer" style="font-size: 13.5px; color: var(--teal); text-decoration: underline;" class="mono">
+              View Asset Link / Document &rarr;
+            </a>
+          </div>
+        {% endif %}
+
+        <div style="font-size: 12.5px; color: var(--ink-faint);">
+          Uploaded by: <strong style="color: var(--ink);">{{ m.uploader_name or m.uploader_email or 'User #' + m.uploaded_by|string }}</strong> on {{ m.created_at }}
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <form method="POST" action="{{ url_for('admin_material_approve', material_id=m.id) }}" style="margin: 0;">
+          <button type="submit" class="btn btn--primary" style="padding: 8px 18px; background: var(--success); color: #fff;">
+            Approve &amp; Publish
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Pending Materials</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">All uploaded materials have been approved and published.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

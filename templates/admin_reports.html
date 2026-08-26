@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}User Reports — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">User Reports</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 28px; margin-bottom: 6px;">Reported Content &amp; Flags</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Review items and users reported by community members.</p>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn--ghost">&larr; Back to Dashboard</a>
+  </div>
+
+  {% if reports %}
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th style="padding: 10px 14px;">Date</th>
+          <th style="padding: 10px 14px;">Reporter</th>
+          <th style="padding: 10px 14px;">Target Entity</th>
+          <th style="padding: 10px 14px;">Reason</th>
+          <th style="padding: 10px 14px;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reports %}
+        <tr>
+          <td style="padding: 12px 14px; font-size: 13px;" class="mono">{{ r.created_at }}</td>
+          <td style="padding: 12px 14px;">{{ r.reporter_name or r.reporter_email or 'User #' + r.reporter_id|string }}</td>
+          <td style="padding: 12px 14px;">
+            <span class="chip">{{ r.entity_type|capitalize }} #{{ r.entity_id }}</span>
+          </td>
+          <td style="padding: 12px 14px; color: var(--ink);">{{ r.reason }}</td>
+          <td style="padding: 12px 14px;">
+            <span class="chip" style="{% if r.status == 'pending' %}background: var(--warning-soft); color: var(--warning);{% else %}background: var(--success-soft); color: var(--success);{% endif %}">
+              {{ r.status|upper }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Active Reports</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">No community reports are currently filed.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

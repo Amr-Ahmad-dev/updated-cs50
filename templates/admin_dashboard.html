@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block title %}Admin Overview — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px; margin-bottom: 28px;">
+  <span class="record__tab">Admin Control Center</span>
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 32px; margin-bottom: 6px;">Administration Dashboard</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Platform monitoring, approval queues, and user moderation oversight.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('admin_users') }}" class="btn btn--ghost">Manage Users</a>
+      <a href="{{ url_for('admin_logs') }}" class="btn btn--primary">Audit Logs</a>
+    </div>
+  </div>
+
+  <!-- Metric KPI Cards Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px; text-align: center; border-radius: var(--radius);">
+      <span class="detail__label">Total Users</span>
+      <div style="font-family: var(--font-display); font-size: 32px; font-weight: 600; color: var(--ink); margin-top: 4px;">{{ stats.total_users }}</div>
+      <span style="font-size: 12px; color: var(--ink-soft);">{{ stats.active_students }} students · {{ stats.professors }} faculty</span>
+    </div>
+
+    <div class="card" style="padding: 20px; text-align: center; border-radius: var(--radius);">
+      <span class="detail__label">Pending Subjects</span>
+      <div style="font-family: var(--font-display); font-size: 32px; font-weight: 600; color: {% if stats.pending_subjects > 0 %}var(--accent){% else %}var(--ink){% endif %}; margin-top: 4px;">
+        {{ stats.pending_subjects }}
+      </div>
+      <a href="{{ url_for('admin_subjects') }}" style="font-size: 12px; color: var(--teal); font-weight: 500;">Review Queue &rarr;</a>
+    </div>
+
+    <div class="card" style="padding: 20px; text-align: center; border-radius: var(--radius);">
+      <span class="detail__label">Pending Materials</span>
+      <div style="font-family: var(--font-display); font-size: 32px; font-weight: 600; color: {% if stats.pending_materials > 0 %}var(--accent){% else %}var(--ink){% endif %}; margin-top: 4px;">
+        {{ stats.pending_materials }}
+      </div>
+      <a href="{{ url_for('admin_materials') }}" style="font-size: 12px; color: var(--teal); font-weight: 500;">Review Queue &rarr;</a>
+    </div>
+
+    <div class="card" style="padding: 20px; text-align: center; border-radius: var(--radius);">
+      <span class="detail__label">Pending Notes</span>
+      <div style="font-family: var(--font-display); font-size: 32px; font-weight: 600; color: {% if stats.pending_notes > 0 %}var(--accent){% else %}var(--ink){% endif %}; margin-top: 4px;">
+        {{ stats.pending_notes }}
+      </div>
+      <a href="{{ url_for('admin_notes') }}" style="font-size: 12px; color: var(--teal); font-weight: 500;">Review Queue &rarr;</a>
+    </div>
+
+    <div class="card" style="padding: 20px; text-align: center; border-radius: var(--radius);">
+      <span class="detail__label">Moderation Flags</span>
+      <div style="font-family: var(--font-display); font-size: 32px; font-weight: 600; color: {% if stats.warned_users > 0 or stats.banned_users > 0 %}var(--danger){% else %}var(--ink){% endif %}; margin-top: 4px;">
+        {{ stats.warned_users + stats.banned_users }}
+      </div>
+      <span style="font-size: 12px; color: var(--ink-soft);">{{ stats.warned_users }} warned · {{ stats.banned_users }} banned</span>
+    </div>
+  </div>
+
+  <!-- Quick Access Action Modules -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    <a href="{{ url_for('admin_users') }}" class="card" style="padding: 24px; text-decoration: none; display: flex; flex-direction: column; gap: 8px;">
+      <h3 style="font-size: 18px; color: var(--ink);">User Directory &amp; Roles</h3>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">Search all registered accounts, modify role tiers, or enforce moderation actions.</p>
+    </a>
+
+    <a href="{{ url_for('admin_subjects') }}" class="card" style="padding: 24px; text-decoration: none; display: flex; flex-direction: column; gap: 8px;">
+      <h3 style="font-size: 18px; color: var(--ink);">Subject Approvals ({{ stats.pending_subjects }})</h3>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">Validate new course codes, descriptions, and professor assignments.</p>
+    </a>
+
+    <a href="{{ url_for('admin_materials') }}" class="card" style="padding: 24px; text-decoration: none; display: flex; flex-direction: column; gap: 8px;">
+      <h3 style="font-size: 18px; color: var(--ink);">Material Approvals ({{ stats.pending_materials }})</h3>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">Screen uploaded lecture slides, summaries, and shared links.</p>
+    </a>
+
+    <a href="{{ url_for('admin_notes') }}" class="card" style="padding: 24px; text-decoration: none; display: flex; flex-direction: column; gap: 8px;">
+      <h3 style="font-size: 18px; color: var(--ink);">Public Note Requests ({{ stats.pending_notes }})</h3>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">Approve student notes submitted for community-wide sharing.</p>
+    </a>
+
+    <a href="{{ url_for('admin_reports') }}" class="card" style="padding: 24px; text-decoration: none; display: flex; flex-direction: column; gap: 8px;">
+      <h3 style="font-size: 18px; color: var(--ink);">User Reports ({{ stats.total_reports }})</h3>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">Investigate user-submitted reports and flag violations.</p>
+    </a>
+
+    <a href="{{ url_for('admin_logs') }}" class="card" style="padding: 24px; text-decoration: none; display: flex; flex-direction: column; gap: 8px;">
+      <h3 style="font-size: 18px; color: var(--ink);">Audit &amp; Moderation Logs</h3>
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">Full transparent timeline of warns, bans, and content decisions.</p>
+    </a>
+  </div>
+</div>
+{% endblock %}

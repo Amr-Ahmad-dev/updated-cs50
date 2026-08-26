@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block title %}Course Statistics — {{ subject.code if subject else 'Analytics' }}{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Academic Statistics</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+        <span class="chip" style="font-weight: 600;">{{ subject.code }}</span>
+        <span class="mono" style="font-size: 13px; color: var(--ink-faint);">Year {{ subject.year }}, Term {{ subject.semester }}</span>
+      </div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">{{ subject.name }} Grade &amp; Performance Statistics</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Aggregated grade distributions, average GPA, hours studied, and student completion metrics.</p>
+    </div>
+    <a href="{{ url_for('subject_detail', subject_id=subject.id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+  </div>
+
+  <!-- KPI Metric Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <div class="card" style="padding: 20px; text-align: center;">
+      <span class="detail__label">Average Course GPA</span>
+      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--ink); margin-top: 4px;">
+        {{ stats.average_gpa or 'N/A' }}
+      </div>
+      <span style="font-size: 12px; color: var(--ink-soft);">Scale: 4.0</span>
+    </div>
+
+    <div class="card" style="padding: 20px; text-align: center;">
+      <span class="detail__label">Course Pass Rate</span>
+      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: {% if stats.pass_rate and stats.pass_rate >= 80 %}var(--success){% else %}var(--ink){% endif %}; margin-top: 4px;">
+        {% if stats.pass_rate %}{{ stats.pass_rate }}%{% else %}N/A{% endif %}
+      </div>
+      <span style="font-size: 12px; color: var(--ink-soft);">Grades A - D</span>
+    </div>
+
+    <div class="card" style="padding: 20px; text-align: center;">
+      <span class="detail__label">Avg. Weekly Study Hours</span>
+      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--ink); margin-top: 4px;">
+        {{ stats.average_hours_studied or 'N/A' }}
+      </div>
+      <span style="font-size: 12px; color: var(--ink-soft);">Hours per week</span>
+    </div>
+
+    <div class="card" style="padding: 20px; text-align: center;">
+      <span class="detail__label">Graded Cohort Size</span>
+      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--ink); margin-top: 4px;">
+        {{ stats.total_students }}
+      </div>
+      <span style="font-size: 12px; color: var(--ink-soft);">Completed records</span>
+    </div>
+  </div>
+
+  <!-- Grade Distribution Breakdown -->
+  <div class="card" style="padding: 28px;">
+    <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 6px;">Letter Grade Distribution (A — F)</h2>
+    <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 20px 0;">Historical distribution of letter marks awarded in this subject.</p>
+
+    {% if stats.grade_distribution %}
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      {% for item in stats.grade_distribution %}
+      <div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px;">
+          <span style="font-weight: 600; color: var(--ink);">Grade {{ item.letter }}</span>
+          <span class="mono" style="color: var(--ink-soft);">{{ item.percentage }}% ({{ item.count }} students)</span>
+        </div>
+        <div style="height: 12px; background: var(--surface); border-radius: 99px; overflow: hidden;">
+          <div style="height: 100%; width: {{ item.percentage }}%; background: {% if item.letter in ['A', 'B'] %}var(--success){% elif item.letter == 'C' %}var(--accent){% elif item.letter == 'D' %}var(--warning){% else %}var(--danger){% endif %};"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color: var(--ink-faint); font-style: italic; margin: 0;">No student grade records available for distribution calculation yet.</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

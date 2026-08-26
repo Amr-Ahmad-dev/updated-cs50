@@ -1,0 +1,335 @@
+{% extends "layout.html" %}
+{% block title %}Home — Ledger{% endblock %}
+
+{% block page_style %}
+<style>
+  /* ============================================================
+     HOME DASHBOARD - THEME-ADAPTIVE DESIGN SYSTEM
+     ============================================================ */
+
+  .hero, .quick-actions, .dash-grid {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Hero Section */
+  .hero {
+    display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end;
+    justify-content: space-between; margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .hero h1 { 
+    font-size: 32px; 
+    font-weight: 700; 
+    color: var(--ink);
+    margin: 0 0 8px 0;
+    letter-spacing: -0.02em;
+  }
+  
+  .hero h1 em { 
+    font-style: normal; 
+    color: var(--accent); 
+  }
+  
+  .hero p { 
+    color: var(--ink-soft); 
+    font-size: 16px; 
+    margin: 0; 
+  }
+
+  /* Search Bar */
+  .hero__search { 
+    display: flex; gap: 12px; min-width: 280px; flex: 1; max-width: 460px; 
+  }
+  
+  .hero__search input {
+    font-size: 14.5px;
+    padding: 12px 16px; 
+    border-radius: var(--radius);
+    border: 1px solid var(--border-strong); 
+    background: var(--bg-elevated); 
+    color: var(--ink);
+    transition: all var(--transition-fast);
+    flex: 1;
+  }
+
+  .hero__search input:focus {
+    outline: none; 
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  .quick-actions { 
+    display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; 
+  }
+  .quick-actions .btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* Dashboard Grid */
+  .dash-grid {
+    display: grid; grid-template-columns: 1fr; gap: 24px;
+  }
+  @media (min-width: 760px) { .dash-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1080px) { .dash-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+  /* Floating Cards */
+  .dash-card { 
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px; 
+    display: flex; flex-direction: column; 
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+  }
+  .dash-card:hover { 
+    box-shadow: var(--shadow-md); 
+    border-color: var(--border-strong); 
+  }
+  
+  .dash-card--wide { grid-column: span 1; }
+  @media (min-width: 760px) { .dash-card--wide { grid-column: span 2; } }
+
+  .dash-card__head { 
+    display: flex; justify-content: space-between; align-items: baseline; 
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dash-card__head h3 { font-size: 18px; font-weight: 700; color: var(--ink); margin: 0; }
+  .dash-card__head a { font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; }
+  .dash-card__head a:hover { text-decoration: underline; }
+
+  /* Lists inside Cards */
+  .dash-list { display: flex; flex-direction: column; margin: 0 -12px; }
+  
+  .dash-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px; border-radius: var(--radius);
+    text-decoration: none; color: inherit;
+    transition: background-color var(--transition-fast);
+  }
+  .dash-row:hover { background: var(--surface); }
+  
+  .dash-row__code {
+    font-size: 12px; font-weight: 700; color: var(--accent);
+    background: var(--accent-soft); padding: 4px 8px; border-radius: var(--radius-sm); flex: none;
+    letter-spacing: 0.05em;
+  }
+  
+  .dash-row__title { font-size: 14.5px; font-weight: 500; color: var(--ink); flex: 1; line-height: 1.4; }
+  .dash-row__meta { font-size: 12px; color: var(--ink-soft); flex: none; }
+  
+  .dash-row__unread { 
+    width: 8px; height: 8px; border-radius: 50%; 
+    background: var(--accent); flex: none; 
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  /* Empty States */
+  .dash-empty {
+    padding: 24px 12px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px dashed var(--border-strong);
+    margin-top: 8px;
+  }
+  .dash-empty a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .dash-empty a:hover { text-decoration: underline; }
+
+  /* Admin Strip */
+  .admin-strip {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .admin-strip a {
+    flex: 1; min-width: 140px;
+    padding: 16px; border-radius: var(--radius);
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+  .admin-strip a:hover { 
+    background: var(--surface-hover); 
+    border-color: var(--accent); 
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+  }
+  .admin-strip a span { 
+    display: block; 
+    font-size: 11px; color: var(--ink-faint); font-weight: 700; 
+    margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; 
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="hero">
+  <div>
+    <h1>Good to see you, <em>{{ (user_profile.name if user_profile and user_profile.name else session.get('email','') .split('@')[0]) | capitalize }}</em>.</h1>
+    <p>Here's what's waiting in your personal ledger.</p>
+  </div>
+  <form class="hero__search" action="{{ url_for('search_global') }}" method="get">
+    <input type="search" name="q" placeholder="Search subjects, materials, professors…" aria-label="Search" required>
+    <button type="submit" class="btn btn--primary" style="padding: 10px 18px;">Search</button>      
+  </form>
+</div>
+
+<div class="quick-actions">
+  <a href="{{ url_for('subject_list') }}" class="btn btn--primary">Browse Subjects</a>
+  <a href="{{ url_for('note_add') }}" class="btn btn--ghost">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+    Add a Note
+  </a>
+  <a href="{{ url_for('my_notes') }}" class="btn btn--ghost">My Notes</a>
+  <a href="{{ url_for('favorite_list') }}" class="btn btn--ghost">Favorites</a>
+  <a href="{{ url_for('message_list') }}" class="btn btn--ghost">
+    Messages {% if unread_message_count > 0 %}<span class="chip" style="padding: 2px 6px; font-size: 10px; background: var(--accent); color: var(--accent-ink);">{{ unread_message_count }}</span>{% endif %}
+  </a>
+</div>
+
+<div class="dash-grid">
+
+  <!-- Favorites Section -->
+  <div class="record dash-card">
+    <span class="record__tab">Starred Items</span>
+    <div class="dash-card__head">
+      <h3>Favorite Subjects</h3>
+      <a href="{{ url_for('favorite_list') }}">View all →</a>
+    </div>
+    {% if favorites and favorites.subjects %}
+    <div class="dash-list">
+      {% for s in favorites.subjects %}
+      <a class="dash-row" href="{{ url_for('subject_detail', subject_id=s.id) }}">
+        <span class="dash-row__code">{{ s.code }}</span>
+        <span class="dash-row__title">{{ s.name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="dash-empty">No favorites yet. Star a subject from its page to keep it here.</div>
+    {% endif %}
+  </div>
+
+  <!-- Notifications -->
+  <div class="record dash-card">
+    <span class="record__tab">Notifications</span>
+    <div class="dash-card__head">
+      <h3>Unread Alerts</h3>
+      <a href="{{ url_for('notification_list') }}">View all →</a>
+    </div>
+    {% if notifications %}
+    <div class="dash-list">
+      {% for n in notifications %}
+      <div class="dash-row">
+        <span class="dash-row__unread"></span>
+        <span class="dash-row__title">{{ n.message | default('New notification') }}</span>
+        <span class="dash-row__meta">{{ n.created_at | default('') }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="dash-empty">You're caught up — nothing unread.</div>
+    {% endif %}
+  </div>
+
+  <!-- Direct Messages Widget -->
+  <div class="record dash-card">
+    <span class="record__tab">Recent Messages</span>
+    <div class="dash-card__head">
+      <h3>Direct Inbox</h3>
+      <a href="{{ url_for('message_list') }}">Open Inbox →</a>
+    </div>
+    {% if recent_messages %}
+    <div class="dash-list">
+      {% for m in recent_messages %}
+      <a class="dash-row" href="{{ url_for('message_thread', other_user_id=m.sender_id) }}">
+        <span class="dash-row__title"><strong>{{ m.sender_name or 'User' }}:</strong> {{ m.content[:35] }}...</span>
+        <span class="dash-row__meta">{{ m.created_at }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="dash-empty">No incoming messages. Connect with classmates in the directory.</div>
+    {% endif %}
+  </div>
+
+  <!-- Recent history -->
+  <div class="record dash-card">
+    <span class="record__tab">Recent History</span>
+    <div class="dash-card__head">
+      <h3>Recently Visited</h3>
+      <a href="{{ url_for('history_view') }}">Full History →</a>
+    </div>
+    {% if recent_history %}
+    <div class="dash-list">
+      {% for item in recent_history %}
+      <a class="dash-row" href="{% if item.entity_type == 'subject' %}{{ url_for('subject_detail', subject_id=item.entity_id) }}{% elif item.entity_type == 'professor' %}{{ url_for('professor_detail', professor_id=item.entity_id) }}{% else %}{{ url_for('subject_list') }}{% endif %}">
+        {% if item.code %}<span class="dash-row__code">{{ item.code }}</span>{% endif %}
+        <span class="dash-row__title">{{ item.title | default('Visited Item') }}</span>
+        <span class="dash-row__meta">{{ item.visited_at | default('') }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="dash-empty">Nothing visited yet. Open a subject and it'll show up here.</div>
+    {% endif %}
+  </div>
+
+  {% if Features.ENABLE_EVENTS %}
+  <!-- Upcoming events -->
+  <div class="record dash-card dash-card--wide">
+    <span class="record__tab">Academic Schedule</span>
+    <div class="dash-card__head">
+      <h3>Upcoming Events &amp; Deadlines</h3>
+      <a href="{{ url_for('event_list') }}">View Calendar →</a>
+    </div>
+    {% if upcoming_events %}
+    <div class="dash-list">
+      {% for e in upcoming_events %}
+      <a class="dash-row" href="{{ url_for('event_detail', event_id=e.id) }}">
+        <span class="dash-row__title">{{ e.title | default('Untitled event') }}</span>
+        <span class="dash-row__meta">{{ e.event_date | default('') }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="dash-empty">Nothing on the calendar right now. Check back for exam milestones.</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if is_admin or is_professor %}
+  <div class="record dash-card dash-card--wide">
+    <span class="record__tab">Management Portal</span>
+    <div class="dash-card__head">
+      <h3>{{ 'Administration Tools' if is_admin else 'Faculty Portal' }}</h3>
+    </div>
+    <div class="admin-strip">
+      {% if is_admin %}
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard<span>Metrics</span></a>
+        <a href="{{ url_for('admin_subjects') }}">Subjects<span>Approvals</span></a>
+        <a href="{{ url_for('admin_materials') }}">Materials<span>Approvals</span></a>
+        <a href="{{ url_for('admin_notes') }}">Notes<span>Approvals</span></a>
+        <a href="{{ url_for('admin_users') }}">Users<span>Moderation</span></a>
+      {% endif %}
+      {% if is_professor %}
+        <a href="{{ url_for('professor_dashboard') }}">Dashboard<span>Faculty Workspace</span></a>
+        <a href="{{ url_for('professor_subjects') }}">My Subjects<span>Assigned Courses</span></a>
+        <a href="{{ url_for('professor_materials') }}">Uploaded Resources<span>Materials</span></a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

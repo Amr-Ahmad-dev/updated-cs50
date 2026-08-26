@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block title %}{{ student.name }} — Student Profile{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 24px;">
+
+  <!-- Student Profile Card -->
+  <div class="record record--profile">
+    <span class="record__tab">Student Record #{{ student.id }}</span>
+
+    <div class="profile-head">
+      {% if student.avatar %}
+        <img src="{{ student.avatar }}" class="avatar avatar--lg" alt="">
+      {% else %}
+        <span class="avatar avatar--lg">{{ student.name[0]|upper if student.name else 'S' }}</span>
+      {% endif %}
+
+      <div class="profile-heading">
+        <div class="profile-heading__eyebrow">Classmate Profile</div>
+        <h1 class="profile-heading__name">{{ student.name }}</h1>
+        <div class="profile-heading__term">
+          <span class="mono">Year {{ student.current_year or 1 }}, Semester {{ student.current_semester or 1 }}</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{{ url_for('message_thread', other_user_id=student.id) }}" class="btn btn--primary">Send Direct Message</a>
+        <a href="{{ url_for('student_list') }}" class="btn btn--ghost">&larr; Student Directory</a>
+      </div>
+    </div>
+
+    <div class="detail-grid" style="margin-bottom: 24px;">
+      <div class="detail">
+        <span class="detail__label">Academic Standing</span>
+        <span class="detail__value">Year {{ student.current_year or 1 }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Current Term</span>
+        <span class="detail__value">Semester {{ student.current_semester or 1 }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Cumulative GPA</span>
+        <span class="detail__value mono">{{ student.average_gpa or 'N/A' }}</span>
+      </div>
+
+      <div class="detail">
+        <span class="detail__label">Enrolled Subjects</span>
+        <span class="detail__value mono">{{ student.enrolled_subjects|length }} courses</span>
+      </div>
+    </div>
+
+    {% if student.bio %}
+    <div style="background: var(--surface); padding: 18px; border-radius: var(--radius); border: 1px solid var(--border);">
+      <span class="detail__label" style="margin-bottom: 6px; display: block;">About</span>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--ink);">{{ student.bio }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Enrolled Courses -->
+  <div class="record" style="padding: 32px;">
+    <span class="record__tab">Enrolled Courses</span>
+    <h2 style="font-size: 22px; margin-bottom: 16px;">Current Course Enrollments</h2>
+
+    {% if student.enrolled_subjects %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+      {% for s in student.enrolled_subjects %}
+      <div class="card" style="padding: 20px;">
+        <span class="chip" style="margin-bottom: 8px;">{{ s.code }}</span>
+        <h3 style="font-size: 17px; margin-bottom: 6px;">
+          <a href="{{ url_for('subject_detail', subject_id=s.id) }}">{{ s.name }}</a>
+        </h3>
+        <span style="font-size: 13px; color: var(--ink-soft);">{{ s.credits }} Credits · Year {{ s.year }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color: var(--ink-faint); font-style: italic; margin: 0;">No enrolled subjects recorded for this student.</p>
+    {% endif %}
+  </div>
+
+  <!-- Public Notes Published by Student -->
+  {% if student.public_notes %}
+  <div class="record" style="padding: 32px;">
+    <span class="record__tab">Shared Study Notes</span>
+    <h2 style="font-size: 22px; margin-bottom: 16px;">Published Notes</h2>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      {% for n in student.public_notes %}
+      <div class="card" style="padding: 20px;">
+        <span class="chip" style="margin-bottom: 8px;">{{ n.subject_name }}</span>
+        <h3 style="font-size: 18px; margin-bottom: 8px;">{{ n.title }}</h3>
+        <div style="font-size: 14px; color: var(--ink-soft); line-height: 1.6; white-space: pre-wrap;">{{ n.content }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

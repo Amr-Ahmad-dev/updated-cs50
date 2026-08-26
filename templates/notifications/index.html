@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block title %}Notifications{% endblock %}
+{% block main_style %}style="max-width:900px;margin:auto;padding:32px 20px 60px;"{% endblock %}
+
+{% block content %}
+<style>
+    /* Layout & Filters */
+    .n-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .n-tools { display: flex; gap: 10px; }
+    .pill { padding: 8px 20px; border-radius: 999px; text-decoration: none; border: 1px solid var(--border); color: var(--muted); font-weight: 600; transition: .2s; cursor: pointer; background: var(--surface); }
+    .pill:hover, .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* Notification Cards */
+    .list { display: grid; gap: 16px; }
+    .card { display: flex; gap: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; cursor: pointer; transition: .2s; border-left: 6px solid transparent; align-items: center; position: relative; }
+    .card:hover { transform: translateY(-2px); border-color: var(--primary); }
+    .card.unread { border-left-color: var(--primary); }
+    
+    .icon-box { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(78,110,242,.1); }
+    .content { flex: 1; }
+    .title { font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+    .msg { color: var(--muted); font-size: 0.95rem; }
+    
+    /* Empty State (Ring Design) */
+    .empty-state { text-align: center; padding: 100px 20px; }
+    .ring { width: 140px; height: 140px; border: 6px solid var(--border); border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; animation: pulse 2s infinite; }
+    .ring::after { content: '🔔'; font-size: 50px; }
+    
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(78,110,242, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(78,110,242, 0); } 100% { box-shadow: 0 0 0 0 rgba(78,110,242, 0); } }
+</style>
+
+<div class="n-head">
+    <div>
+        <h1>Notifications</h1>
+        <p style="color: var(--muted);">Stay updated with your account activity.</p>
+    </div>
+<div class="n-tools" style="display: flex !important; gap: 10px; ">
+    <a class="pill" href="{{ url_for('notification_list') }}" style="color: black !important; background: lightgray !important;">All</a>
+    <a class="pill" href="{{ url_for('notification_list', filter='unread') }}" style="color: black !important; background: lightgray !important;">Unread</a>
+    <a class="pill" href="{{ url_for('notification_list', filter='read') }}" style="color: black !important; background: lightgray !important;">Read</a>
+</div>
+</div>
+
+{% if notifications %}
+    <div class="list">
+        {% for n in notifications.values() %}
+        <!-- Clicking this card submits the hidden form to mark as read -->
+        <div class="card {% if not n.is_read %}unread{% endif %}" onclick="markRead('form_{{ n.id }}')">
+            <div class="icon-box">
+                {% if n.type=="assignment" %}📘{% elif n.type=="grade" %}🎓{% elif n.type=="warning" %}⚠️{% elif n.type=="system" %}⚙️{% elif n.type=="message" %}💬{% elif n.type=="announcement" %}📢{% else %}🔔{% endif %}
+            </div>
+            <div class="content">
+                <div class="title">{{ n.type }}</div>
+                <div class="msg">{{ n.message }}</div>
+                <div style="font-size: 0.8rem; color: var(--muted); margin-top: 5px;">{{ n.created_at }}</div>
+            </div>
+            
+            <!-- Hidden form for automatic POST submission -->
+            <form id="form_{{ n.id }}" method="POST" action="{{ url_for('notification_list') }}" style="display:none;">
+                <input type="hidden" name="notification_id" value="{{ n.id }}">
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-state">
+        <div class="ring"></div>
+        <h2>You're all caught up!</h2>
+        <p style="color: var(--muted);">No notifications are waiting for you.</p>
+    </div>
+{% endif %}
+
+<script>
+    function markRead(formId) {
+        // Automatically submits the hidden form when a card is clicked
+        document.getElementById(formId).submit();
+    }
+</script>
+{% endblock %}

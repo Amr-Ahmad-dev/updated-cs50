@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Assignments — Ledger{% endblock %}
+
+{% block content %}
+<div class="record" style="padding: 32px;">
+  <span class="record__tab">Course Problem Sets</span>
+
+  <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+    <div>
+      <h1 style="font-size: 30px; margin-bottom: 6px;">Course Assignments &amp; Problem Sets</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Track all coursework tasks, problem specifications, and project deliverables.</p>
+    </div>
+    <a href="{{ url_for('subject_detail', subject_id=subject_id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+  </div>
+
+  {% if assignments %}
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for a in assignments %}
+    <div class="card" style="padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div style="flex: 1; min-width: 260px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <span class="chip" style="font-weight: 600;">{{ a.subject_code }}</span>
+          <span class="mono" style="font-size: 12.5px; color: var(--ink-faint);">Year {{ a.year }}, Term {{ a.semester }}</span>
+        </div>
+        <h2 style="font-size: 20px; margin-bottom: 6px; color: var(--ink);">
+          <a href="{{ url_for('assignment_detail', subject_id=subject_id, assignment_id=a.id) }}">{{ a.title }}</a>
+        </h2>
+        <p style="font-size: 14px; color: var(--ink-soft); margin: 0; line-height: 1.5;">{{ a.description }}</p>
+      </div>
+
+      <div>
+        <a href="{{ url_for('assignment_detail', subject_id=subject_id, assignment_id=a.id) }}" class="btn btn--primary" style="padding: 8px 18px;">
+          View Specification &rarr;
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 48px; text-align: center; background: var(--surface); border-radius: var(--radius);">
+    <div style="font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 6px;">No Assignments Listed</div>
+    <p style="color: var(--ink-soft); margin: 0; font-size: 14px;">Course assignments will appear here once published by the instructor.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
