@@ -518,6 +518,8 @@
 
     {% if session.get('user_id') %}
     <div class="nav__links">
+      <a class="nav__link" href="{{ url_for('portfolio_index') }}">Portfolio</a>
+      <a class="nav__link" href="{{ url_for('portfolio_services') }}">Services</a>
       <a class="nav__link" href="{{ url_for('home') }}">Home</a>
       <a class="nav__link" href="{{ url_for('subject_list') }}">Subjects</a>
       <a class="nav__link" href="{{ url_for('favorite_list') }}">Favorites</a>

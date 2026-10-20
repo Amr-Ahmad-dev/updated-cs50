@@ -105,6 +105,8 @@ import modules.messages as messages
 import modules.notifications as notifications
 import modules.admin as admin
 import modules.moderation as moderation
+import modules.portfolio as portfolio
+import modules.evidence_registry as evidence_registry
 
 ###############################################################################
 # Configuration
@@ -529,6 +531,7 @@ def register_routes(app: Flask) -> None:
     _register_professor_tool_routes(app)
     _register_admin_routes(app)
     _register_moderation_routes(app)
+    _register_portfolio_routes(app)
 
 
 # -----------------------------------------------------------------------
@@ -1669,7 +1672,109 @@ def _register_moderation_routes(app: Flask) -> None:
             flash_error(error or "Could not unban user.")
         else:
             flash_success("User unbanned.")
-        return redirect(url_for("admin_user_detail", user_id=user_id))
+
+def _register_portfolio_routes(app: Flask) -> None:
+    """
+    Developer Portfolio & Service Catalog Routes
+    ============================================
+    Integrates evidence-based portfolio, project case studies, CS50 breakdown,
+    service inquiry pipeline, and administrative inquiry moderation.
+    """
+
+    @app.route("/portfolio")
+    def portfolio_index():
+        overview = portfolio.get_portfolio_overview()
+        return render_template(
+            "portfolio/index.html",
+            featured_projects=overview["featured_projects"],
+            eligible_services=overview["eligible_services"],
+            stats=overview["stats"]
+        )
+
+    @app.route("/portfolio/projects")
+    def portfolio_projects():
+        classification = request.args.get("filter")
+        projs = portfolio.list_projects(classification=classification)
+        return render_template(
+            "portfolio/projects.html",
+            projects=projs,
+            current_classification=classification
+        )
+
+    @app.route("/portfolio/projects/<project_id>")
+    def portfolio_project_detail(project_id: str):
+        proj = portfolio.get_project_detail(project_id)
+        if not proj:
+            abort(404)
+        return render_template("portfolio/project_detail.html", project=proj)
+
+    @app.route("/portfolio/services")
+    def portfolio_services():
+        srvs = portfolio.list_services()
+        return render_template("portfolio/services.html", services=srvs)
+
+    @app.route("/portfolio/cs50")
+    def portfolio_cs50():
+        assignments_list = portfolio.list_cs50_assignments()
+        return render_template("portfolio/cs50.html", assignments=assignments_list)
+
+    @app.route("/portfolio/inquire", methods=["GET", "POST"])
+    def portfolio_inquire():
+        srvs = portfolio.list_services()
+        selected_service_id = request.args.get("service", "")
+        selected_project_id = request.args.get("project", "")
+        success_msg = None
+        error_msg = None
+
+        if request.method == "POST":
+            name = request.form.get("name", "")
+            email = request.form.get("email", "")
+            service_id = request.form.get("service", "")
+            subservice_id = request.form.get("subservice", "")
+            project_id = request.form.get("project", "")
+            message = request.form.get("message", "")
+
+            ok, msg = portfolio.submit_service_inquiry(
+                name=name,
+                email=email,
+                service_id=service_id,
+                subservice_id=subservice_id,
+                project_id=project_id,
+                channel="web_form",
+                message=message
+            )
+            if ok:
+                success_msg = msg
+                selected_service_id = ""
+                selected_project_id = ""
+            else:
+                error_msg = msg
+
+        return render_template(
+            "portfolio/inquire.html",
+            services=srvs,
+            selected_service_id=selected_service_id,
+            selected_project_id=selected_project_id,
+            success_msg=success_msg,
+            error_msg=error_msg
+        )
+
+    @app.route("/admin/portfolio/inquiries")
+    @admin_required
+    def portfolio_admin_inquiries():
+        inquiries = portfolio.list_inquiries_for_admin()
+        return render_template("portfolio/admin_inquiries.html", inquiries=inquiries)
+
+    @app.route("/admin/portfolio/inquiries/<int:inquiry_id>/status", methods=["POST"])
+    @admin_required
+    def portfolio_admin_inquiry_status(inquiry_id: int):
+        new_status = request.form.get("status", "")
+        ok, msg = portfolio.update_inquiry_status(inquiry_id, new_status)
+        if ok:
+            flash_success("Inquiry status updated successfully.")
+        else:
+            flash_error(f"Failed to update status: {msg}")
+        return redirect(url_for("portfolio_admin_inquiries"))
 
 
 ###############################################################################

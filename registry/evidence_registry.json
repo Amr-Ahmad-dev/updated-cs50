@@ -1,0 +1,1517 @@
+{
+  "repositories": [
+    {
+      "id": "cs50x-projects",
+      "name": "cs50x-projects",
+      "url": "https://github.com/Amr-Ahmad-dev/cs50x-projects",
+      "default_branch": "main",
+      "inspected_sha": "verified_clone",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Harvard CS50x problem sets in C, Python, SQL, HTML/CSS/JS, Flask."
+    },
+    {
+      "id": "data-analysis",
+      "name": "data-analysis",
+      "url": "https://github.com/Amr-Ahmad-dev/data-analysis",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Car Price Prediction with IQR outlier handling, RidgeCV, and 6-panel diagnostics."
+    },
+    {
+      "id": "dejavu_mvp",
+      "name": "dejavu_mvp",
+      "url": "https://github.com/Amr-Ahmad-dev/dejavu_mvp",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Flutter cross-platform outing discovery mobile application prototype."
+    },
+    {
+      "id": "DEPI_project_NLP",
+      "name": "DEPI_project_NLP",
+      "url": "https://github.com/Amr-Ahmad-dev/DEPI_project_NLP",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Text grammar and spelling correction neural network from DEPI initiative."
+    },
+    {
+      "id": "Employee-prediction-assessment",
+      "name": "Employee-prediction-assessment",
+      "url": "https://github.com/Amr-Ahmad-dev/Employee-prediction-assessment",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Telco customer churn prediction with Random Forest, visualizer class, and evaluation."
+    },
+    {
+      "id": "end_to_end-ml",
+      "name": "end_to_end-ml",
+      "url": "https://github.com/Amr-Ahmad-dev/end_to_end-ml",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "End-to-end chronic disease prediction with 180k+ records, class weighting, and model serialization."
+    },
+    {
+      "id": "Habit-tracking-gamified",
+      "name": "Habit-tracking-gamified",
+      "url": "https://github.com/Amr-Ahmad-dev/Habit-tracking-gamified",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Gamified habit tracker with daily streak mechanisms and progress visualization."
+    },
+    {
+      "id": "Message-connect.",
+      "name": "Message-connect.",
+      "url": "https://github.com/Amr-Ahmad-dev/Message-connect.",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Direct messaging prototype with SQLite message persistence."
+    },
+    {
+      "id": "Numerical-Analysis-with-Heuristic",
+      "name": "Numerical-Analysis-with-Heuristic",
+      "url": "https://github.com/Amr-Ahmad-dev/Numerical-Analysis-with-Heuristic",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Iterative linear equation solvers (Jacobi, Gauss-Seidel) with matrix heuristic selection."
+    },
+    {
+      "id": "Nvidia-stock-price-prediction",
+      "name": "Nvidia-stock-price-prediction",
+      "url": "https://github.com/Amr-Ahmad-dev/Nvidia-stock-price-prediction",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "NVDA hourly volatility classification using 10 gradient-boosted and tree models."
+    },
+    {
+      "id": "Roadmap-tracker",
+      "name": "Roadmap-tracker",
+      "url": "https://github.com/Amr-Ahmad-dev/Roadmap-tracker",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Developer milestone and technical competency tracking tool."
+    },
+    {
+      "id": "Ship-Flow-a-Flutter-app-for-Android",
+      "name": "Ship-Flow-a-Flutter-app-for-Android",
+      "url": "https://github.com/Amr-Ahmad-dev/Ship-Flow-a-Flutter-app-for-Android",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Mobile commerce and logistics UI prototype built in Flutter/Dart."
+    },
+    {
+      "id": "Sport-management-system",
+      "name": "Sport-management-system",
+      "url": "https://github.com/Amr-Ahmad-dev/Sport-management-system",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Desktop club management application in Java Swing with custom Trie prefix index."
+    },
+    {
+      "id": "the-game-of-life-",
+      "name": "the-game-of-life-",
+      "url": "https://github.com/Amr-Ahmad-dev/the-game-of-life-",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Conway Game of Life cellular automaton in C++ with Win32 GDI double-buffering."
+    },
+    {
+      "id": "Training-and-small-projects",
+      "name": "Training-and-small-projects",
+      "url": "https://github.com/Amr-Ahmad-dev/Training-and-small-projects",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Curated collection of applied machine learning, exploratory modeling, and data exercises."
+    },
+    {
+      "id": "updated-cs50",
+      "name": "updated-cs50",
+      "url": "https://github.com/Amr-Ahmad-dev/updated-cs50",
+      "default_branch": "main",
+      "inspected_sha": "15852d2",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Flask student management platform with 7-tier role authorization, moderation, and academic tracking."
+    },
+    {
+      "id": "web_Scrubbing-",
+      "name": "web_Scrubbing-",
+      "url": "https://github.com/Amr-Ahmad-dev/web_Scrubbing-",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Web data acquisition pipeline with Selenium dynamic scraping and Pandas extraction."
+    },
+    {
+      "id": "WhatsApp-mimicking-application",
+      "name": "WhatsApp-mimicking-application",
+      "url": "https://github.com/Amr-Ahmad-dev/WhatsApp-mimicking-application",
+      "default_branch": "main",
+      "inspected_sha": "verified_source",
+      "accessible": true,
+      "license": "none found",
+      "verification_status": "verified_source",
+      "description": "Educational chat client interface replicating core mobile messaging workflows."
+    }
+  ],
+  "projects": [
+    {
+      "id": "chronic-disease-ml",
+      "title": "End-to-End Chronic Disease Prediction",
+      "slug": "chronic-disease-ml",
+      "short_description": "Reproducible machine-learning classification pipeline with data preprocessing, threshold tuning, and an interactive Streamlit risk assessment interface.",
+      "overview": "An end-to-end predictive healthcare machine learning project classifying individual chronic disease risk from behavioural survey data. Spanning data acquisition, cleaning, imbalance handling, model benchmarking, probability calibration, and deployment via an interactive Streamlit web dashboard.",
+      "problem": "Public health datasets feature substantial class imbalance, noisy self-reported indicators, and skewed distributions where default classification thresholds fail to catch high-risk individuals.",
+      "solution": "Built a modular pipeline handling missing values, encoding categoricals, and tuning decision thresholds to prioritize high recall on vulnerable cases without collapsing precision.",
+      "primary_service": "data-ml",
+      "capabilities": [
+        "data-cleaning",
+        "eda-visualization",
+        "predictive-ml",
+        "model-packaging"
+      ],
+      "technologies": [
+        "Python",
+        "Scikit-Learn",
+        "Streamlit",
+        "Pandas",
+        "Joblib",
+        "Matplotlib",
+        "Seaborn"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Independently implemented data preprocessing, exploratory statistical visualizations, class imbalance evaluation, model selection, probability threshold optimization, and Streamlit prediction interface.",
+      "implementation_status": "Completed Research Prototype",
+      "limitations": [
+        "Experimental classification model based on survey data (CDC BRFSS ~253k records); not a clinically validated diagnostic tool.",
+        "High recall (~91%) is achieved by shifting the decision threshold to ~0.35, resulting in trade-offs with false positive rates (precision ~37.89%)."
+      ],
+      "results": [
+        {
+          "metric": "Dataset Size",
+          "value": "253,680 rows, 20 features"
+        },
+        {
+          "metric": "Recall (High-Risk Target)",
+          "value": "91.21%"
+        },
+        {
+          "metric": "ROC-AUC",
+          "value": "82.23%"
+        },
+        {
+          "metric": "PR-AUC",
+          "value": "57.68%"
+        },
+        {
+          "metric": "Precision",
+          "value": "37.89%"
+        },
+        {
+          "metric": "Accuracy",
+          "value": "61.89%"
+        },
+        {
+          "metric": "Decision Threshold",
+          "value": "0.35"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/end_to_end-ml",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [
+        "images/Health Risk Assessment - Brave 9_17_2026 4_00_06 PM.png",
+        "images/Health Risk Assessment - Brave 9_17_2026 4_00_11 PM.png",
+        "images/correlation_matrix_heatmap.png",
+        "images/missing_value_map.png",
+        "images/target_class_distribution.png",
+        "images/target_correlation_barh.png",
+        "images/top_features_pairplot.png"
+      ],
+      "videos": [
+        "videos/Screen Recording 2026-10-15 190217.mp4",
+        "videos/Screen Recording 2026-10-15 190325.mp4"
+      ],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 1,
+      "portfolio_classification": "data_ml",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "web-scraping",
+      "title": "Web Data Acquisition & Structured Extraction",
+      "slug": "web-scraping",
+      "short_description": "Automated web scraping pipeline extracting structured catalog data with error handling, rate limiting, and tabular data normalization.",
+      "overview": "A data engineering workflow designed to ingest, parse, clean, and structure catalog data from multi-page web sources into validated datasets.",
+      "problem": "Dynamic web pages and pagination require structured traversal, graceful error recovery on transient failures, and clean schema normalization.",
+      "solution": "Built automated extractors using Requests, Beautiful Soup, and Selenium with session pooling, DOM selectors, schema validation, and Pandas tabular export.",
+      "primary_service": "data-ml",
+      "capabilities": [
+        "data-acquisition"
+      ],
+      "technologies": [
+        "Python",
+        "Selenium",
+        "Beautiful Soup",
+        "Pandas",
+        "Requests"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Designed extraction logic, pagination handling, schema parsing, and structured data serialization.",
+      "implementation_status": "Completed Script Pipeline",
+      "limitations": [
+        "Targeted at structured public e-commerce catalogs (e.g. Books to Scrape); does not bypass complex CAPTCHA challenges.",
+        "Requires DOM selector maintenance if target markup structures change."
+      ],
+      "results": [
+        {
+          "metric": "Extraction Reliability",
+          "value": "100% across catalog pagination"
+        },
+        {
+          "metric": "Data Output",
+          "value": "Validated CSV and clean DataFrames"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/web_Scrubbing-",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 2,
+      "portfolio_classification": "data_ml",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "car-price-analysis",
+      "title": "Car Price Analysis & Predictive Modeling",
+      "slug": "car-price-analysis",
+      "short_description": "Exploratory multivariate statistical analysis, outlier treatment, and regression modeling of automotive market values.",
+      "overview": "A data analysis and regression modeling study examining automotive features (engine size, curb weight, horsepower, fuel system) to understand pricing mechanics and build predictive pricing models.",
+      "problem": "Automotive pricing data contains non-linear interactions, multi-collinearity, and extreme high-end outliers that skew baseline linear models.",
+      "solution": "Conducted systematic exploratory data analysis, visual correlation heatmaps, log-transformations for skewed values, and cross-validated regression models.",
+      "primary_service": "data-ml",
+      "capabilities": [
+        "data-cleaning",
+        "eda-visualization",
+        "predictive-ml"
+      ],
+      "technologies": [
+        "Python",
+        "Pandas",
+        "NumPy",
+        "Scikit-Learn",
+        "Matplotlib",
+        "Seaborn"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Authored complete exploratory data analysis notebooks, correlation diagnostics, feature scaling, and regression benchmark comparisons.",
+      "implementation_status": "Completed Analytical Case Study",
+      "limitations": [
+        "Based on historical dataset sample; prices do not reflect current secondary market inflation or macroeconomic currency shifts.",
+        "Regression performance is bounded by available physical specs without vehicle condition metrics."
+      ],
+      "results": [
+        {
+          "metric": "EDA Findings",
+          "value": "Engine size, horsepower, and curb weight identified as top price drivers"
+        },
+        {
+          "metric": "Preprocessing",
+          "value": "Categorical one-hot encoding and standardized scaling pipeline"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/data-analysis",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [
+        "images/Screenshot 2026-10-15 182943.png",
+        "images/Screenshot 2026-10-15 182958.png",
+        "images/output_Heat map.png",
+        "images/Presentation.png"
+      ],
+      "videos": [],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 3,
+      "portfolio_classification": "data_ml",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "nvidia-stock-prediction",
+      "title": "NVIDIA Stock Volatility & Movement Prediction",
+      "slug": "nvidia-stock-prediction",
+      "short_description": "Comparative time-series machine-learning study evaluating 10 classification algorithms on historical hourly market features.",
+      "overview": "A machine-learning experiment studying market price movements and volatility of NVIDIA (NVDA) stock. Historical hourly OHLCV data was retrieved, enriched with lagged technical indicators and volatility metrics, and modeled across ten scikit-learn classifiers.",
+      "problem": "Financial time-series data suffers from severe non-stationarity, low signal-to-noise ratio, and temporal leakage risks when standard cross-validation is naively applied.",
+      "solution": "Engineered rolling z-scores, lagged returns, and volatility spreads; enforced chronologically ordered evaluation splits to prevent lookahead bias; benchmarked 10 distinct models.",
+      "primary_service": "data-ml",
+      "capabilities": [
+        "data-cleaning",
+        "eda-visualization",
+        "predictive-ml"
+      ],
+      "technologies": [
+        "Python",
+        "yfinance",
+        "Scikit-Learn",
+        "AdaBoost",
+        "Pandas",
+        "Matplotlib"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Built data ingestion script via yfinance, feature engineering pipeline (lagged indicators, volatility metrics), model training harness across 10 classifiers, and confusion matrix analysis.",
+      "implementation_status": "Completed Benchmark Experiment",
+      "limitations": [
+        "Educational and research model; past statistical predictive scores do NOT guarantee profitable trading or future returns.",
+        "Class imbalance in movement targets requires careful threshold inspection. Transaction fees and slippage were not modeled."
+      ],
+      "results": [
+        {
+          "metric": "Historical Data",
+          "value": "2 years hourly OHLCV market records"
+        },
+        {
+          "metric": "Best Model",
+          "value": "AdaBoost Classifier"
+        },
+        {
+          "metric": "Reported F1 Score",
+          "value": "~0.7283 on experimental test split"
+        },
+        {
+          "metric": "Models Benchmarked",
+          "value": "10 algorithms (AdaBoost, XGBoost, Random Forest, SVC, etc.)"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Nvidia-stock-price-prediction",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [
+        "images/Screenshot 2026-10-15 175642.png",
+        "images/Presentationcorrelation_heatmap.png",
+        "images/Presentationstock_price_and_z_score.png"
+      ],
+      "videos": [
+        "videos/Recording 2026-10-15 175625.mp4"
+      ],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 4,
+      "portfolio_classification": "data_ml",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "nlp-grammar-correction",
+      "title": "Experimental Character-Level NLP Grammar Correction",
+      "slug": "nlp-grammar-correction",
+      "short_description": "Neural text classification model using character-level hashing vectorization to detect and correct grammatical token errors.",
+      "overview": "An experimental natural language processing project developed within the DEPI program investigating character-level n-gram representations for high-cardinality grammatical error correction.",
+      "problem": "Word-level vocabularies often fail on misspelled or morphologically corrupted tokens, creating out-of-vocabulary bottlenecks in low-resource grammar checkers.",
+      "solution": "Employed character-level n-gram HashingVectorizer paired with a Multi-Layer Perceptron (MLP) neural classifier (hidden layers: 512, 256, 128) predicting correction targets across approximately 6,411 token classes.",
+      "primary_service": "ai-engineering",
+      "capabilities": [
+        "nlp-text-processing"
+      ],
+      "technologies": [
+        "Python",
+        "Scikit-Learn",
+        "HashingVectorizer",
+        "MLPClassifier",
+        "NLTK"
+      ],
+      "contribution_level": "ai-assisted",
+      "personal_contribution": "Implemented character-level n-gram vectorization pipeline, trained MLPClassifier neural network, conducted experimental evaluation across word-level and sentence-token metrics.",
+      "implementation_status": "Completed Academic Prototype",
+      "limitations": [
+        "Experimental model; token-level classification accuracy is not equivalent to full human-level sentence grammatical fluency.",
+        "Preliminary owner-reported results: validation accuracy ~59.8%, word-level test accuracy ~56.8%, sentence-token accuracy ~70.3%."
+      ],
+      "results": [
+        {
+          "metric": "Target Classes",
+          "value": "~6,411 token classes"
+        },
+        {
+          "metric": "Neural Architecture",
+          "value": "MLP (512, 256, 128 hidden units)"
+        },
+        {
+          "metric": "Sentence-Token Accuracy",
+          "value": "70.3% (Preliminary reported)"
+        },
+        {
+          "metric": "Word-Level Test Accuracy",
+          "value": "56.8% (Preliminary reported)"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/DEPI_project_NLP",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 5,
+      "portfolio_classification": "ai_engineering",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "employee-prediction",
+      "title": "Employee Prediction Assessment",
+      "slug": "employee-prediction",
+      "short_description": "Predictive workforce modeling assessing retention factors and employee turnover patterns through structured feature analysis.",
+      "overview": "A machine-learning evaluation exploring human resource dataset indicators to identify high-probability employee turnover signals and attribute retention factors.",
+      "problem": "Workforce turnover involves complex combinations of satisfaction scores, evaluation ratings, tenure, and project load that interact non-linearly.",
+      "solution": "Preprocessed HR benchmark metrics, normalized satisfaction and evaluation scales, and evaluated tree-based classifiers to highlight key attrition drivers.",
+      "primary_service": "data-ml",
+      "capabilities": [
+        "predictive-ml",
+        "data-cleaning"
+      ],
+      "technologies": [
+        "Python",
+        "Scikit-Learn",
+        "Pandas",
+        "Matplotlib"
+      ],
+      "contribution_level": "educational-exercise",
+      "personal_contribution": "Structured data cleaning, categorical transformation, model fitting, and evaluation score extraction.",
+      "implementation_status": "Completed Educational Assessment",
+      "limitations": [
+        "Educational assessment dataset; predictions reflect synthetic benchmark scenarios rather than live enterprise HR policies."
+      ],
+      "results": [
+        {
+          "metric": "Scope",
+          "value": "Supervised classification on employee attrition benchmarks"
+        },
+        {
+          "metric": "Deliverable",
+          "value": "Validated preprocessing and classification script"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Employee-prediction-assessment",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 6,
+      "portfolio_classification": "data_ml",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "ledger",
+      "title": "Ledger Academic Community & Student Platform",
+      "slug": "ledger",
+      "short_description": "Full-stack Flask web platform featuring student/faculty directories, course catalogs, academic resource sharing, and community discussions.",
+      "overview": "A comprehensive web application originally developed as a CS50 capstone project to unify university academic workflows: student/professor discovery, course catalogs, review metrics, note archives, and administrative moderation.",
+      "problem": "University students often experience fragmented tools for class directories, course difficulty reviews, schedule coordination, and resource exchange.",
+      "solution": "Built a modular Flask application with SQLite backend, relational database schema, user session handling, search filtering, discussion boards, and administrative control panels.",
+      "primary_service": "full-stack",
+      "capabilities": [
+        "backend-dev",
+        "database-applications",
+        "fullstack-web",
+        "app-architecture"
+      ],
+      "technologies": [
+        "Python",
+        "Flask",
+        "SQLite",
+        "Jinja2",
+        "Vanilla JavaScript",
+        "HTML5/CSS3"
+      ],
+      "contribution_level": "ai-assisted-architecture-integration",
+      "personal_contribution": "Designed core application architecture, relational database tables, view blueprints, and initial full-stack implementation as CS50 capstone; subsequently refined and hardened with AI assistance.",
+      "implementation_status": "Completed Functional Capstone",
+      "limitations": [
+        "Built for educational/campus prototype scope; requires additional multi-tenant partitioning and production WSGI/PostgreSQL hardening for high concurrency.",
+        "Legacy administrator bypasses and insecure hashing practices noted in early drafts have been reviewed and isolated."
+      ],
+      "results": [
+        {
+          "metric": "Feature Modules",
+          "value": "Directory, Courses, Resources, Discussions, Ratings, Notifications"
+        },
+        {
+          "metric": "Architecture",
+          "value": "Flask Blueprints, Jinja2 server rendering, SQLite database"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/updated-cs50",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [
+        "images/Screenshot 2026-10-15 193553.png",
+        "images/Screenshot 2026-10-15 193817.png",
+        "images/Screenshot 2026-10-15 193829.png",
+        "images/Screenshot 2026-10-15 193846.png",
+        "images/Screenshot 2026-10-15 193901.png",
+        "images/Screenshot 2026-10-15 193915.png",
+        "images/Screenshot 2026-10-15 193926.png"
+      ],
+      "videos": [
+        "videos/Recording 2026-10-15 202558.mp4"
+      ],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 7,
+      "portfolio_classification": "full_stack",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "dejavu",
+      "title": "Déjà Vu Outing Discovery MVP",
+      "slug": "dejavu",
+      "short_description": "Budget-first outing recommendation prototype with group swipe matching, vibe tagging, and estimated cost calculations.",
+      "overview": "A web application MVP designed for Cairo outings that simplifies finding social venues based on strict budgets, group size, and vibe preferences.",
+      "problem": "Groups in Cairo struggle to find venues matching collective budget constraints, diverse preferences, and geographic proximity.",
+      "solution": "Built a budget-first recommendation engine with dynamic cost estimators, 8 vibe filters, hidden-gem curation, and interactive group swipe matching.",
+      "primary_service": "full-stack",
+      "capabilities": [
+        "backend-dev",
+        "database-applications",
+        "fullstack-web"
+      ],
+      "technologies": [
+        "Python",
+        "Flask",
+        "SQLite",
+        "Vanilla JavaScript",
+        "CSS3"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Architected the MVP concept, implemented Flask routes, SQLite schema for venues and vibe tags, dynamic budget calculations, and interactive client-side swipe matching.",
+      "implementation_status": "Completed MVP Prototype",
+      "limitations": [
+        "Prototype MVP: review verification is represented by a prototype checkbox rather than external GPS or merchant receipt validation.",
+        "Does not currently feature real financial transactions, automated merchant onboarding, or live third-party booking APIs."
+      ],
+      "results": [
+        {
+          "metric": "Discovery Engine",
+          "value": "Budget-first dynamic estimation & 8 vibe tags"
+        },
+        {
+          "metric": "Interaction",
+          "value": "Client-side group swipe-to-match module"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/dejavu_mvp",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [
+        "images/Screenshot 2026-10-15 203156.png",
+        "images/Screenshot 2026-10-15 203207.png",
+        "images/Screenshot 2026-10-15 203215.png",
+        "images/Screenshot 2026-10-15 203227.png",
+        "images/Screenshot 2026-10-15 203239.png",
+        "images/Screenshot 2026-10-15 203252.png",
+        "images/Screenshot 2026-10-15 203303.png"
+      ],
+      "videos": [
+        "videos/Recording 2026-10-15 203459.mp4"
+      ],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 8,
+      "portfolio_classification": "full_stack",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "habit-quest",
+      "title": "Habit Quest Gamified Habit Tracker",
+      "slug": "habit-quest",
+      "short_description": "Gamified productivity platform tracking habits with experience points (XP), levels, streak statistics, and progress analytics.",
+      "overview": "A full-stack habit tracking web application that transforms daily routines into a progress-oriented game loop with XP rewards, level scaling, and consistency analytics.",
+      "problem": "Maintaining personal routines often fails due to lack of immediate feedback, clear progress indicators, and engaging accountability.",
+      "solution": "Developed a database-backed habit management web app with XP calculation algorithms, streak tracking, level progression, and visual statistics.",
+      "primary_service": "full-stack",
+      "capabilities": [
+        "backend-dev",
+        "database-applications",
+        "fullstack-web"
+      ],
+      "technologies": [
+        "Python",
+        "Flask",
+        "SQLite",
+        "SQLAlchemy",
+        "Jinja2"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Implemented gamification mechanics (XP formulas, streaks), Flask controllers, template views, and database persistence layers.",
+      "implementation_status": "Completed Working Application",
+      "limitations": [
+        "Configured primarily for local SQLite deployment; PostgreSQL configurations tested in development have Python 3.13 driver considerations.",
+        "Does not feature push notification reminders or mobile background sync."
+      ],
+      "results": [
+        {
+          "metric": "Core Loop",
+          "value": "Habit creation, frequency schedules, XP scaling & streak analytics"
+        },
+        {
+          "metric": "Data Integrity",
+          "value": "Relational SQLite schema with SQLAlchemy models"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Habit-tracking-gamified",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 9,
+      "portfolio_classification": "full_stack",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "message-connect",
+      "title": "Message Connect Communication Platform",
+      "slug": "message-connect",
+      "short_description": "Multi-user messaging backend managing conversations, active states, message delivery, and contact directories.",
+      "overview": "A messaging backend and application prototype exploring real-time and polling communication flows, conversation state persistence, and directory search.",
+      "problem": "Multi-user communication requires consistent message indexing, conversational thread state, and reliable persistence boundaries.",
+      "solution": "Engineered a Flask backend managing user directories, thread routing, timestamped message storage, and conversation views.",
+      "primary_service": "full-stack",
+      "capabilities": [
+        "backend-dev",
+        "database-applications",
+        "app-architecture"
+      ],
+      "technologies": [
+        "Python",
+        "Flask",
+        "SQLite",
+        "JavaScript",
+        "HTML/CSS"
+      ],
+      "contribution_level": "ai-assisted-architecture-integration",
+      "personal_contribution": "Designed message data models, user contact relationships, backend API routes, and message delivery flow.",
+      "implementation_status": "Functional Backend Prototype",
+      "limitations": [
+        "Prototype communication application; does not implement end-to-end encryption or distributed WebSocket clustering.",
+        "Intended for local and small-scale testing rather than high-throughput production messaging."
+      ],
+      "results": [
+        {
+          "metric": "Architecture",
+          "value": "Threaded conversation model with relational message store"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Message-connect.",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 10,
+      "portfolio_classification": "full_stack",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "shop-flow",
+      "title": "ShopFlow Mobile Commerce Prototype",
+      "slug": "shop-flow",
+      "short_description": "Cross-platform Flutter mobile commerce interface integrating catalog browsing, shopping cart workflows, and API communication.",
+      "overview": "A mobile application prototype demonstrating modern e-commerce mobile flows: item discovery, category navigation, cart management, and checkout UI.",
+      "problem": "Developing intuitive mobile shopping experiences requires clean widget state management, responsive layouts, and clean API integration.",
+      "solution": "Built a structured Flutter client application for Android coordinating product catalog state, responsive shopping cart, and backend interaction.",
+      "primary_service": "full-stack",
+      "capabilities": [
+        "desktop-mobile-educational",
+        "app-architecture"
+      ],
+      "technologies": [
+        "Flutter",
+        "Dart",
+        "REST API",
+        "Android"
+      ],
+      "contribution_level": "ai-generated-prototype",
+      "personal_contribution": "Directed overall system architecture, component boundaries, state flow design, and integration logic; UI boilerplate implementation was AI-assisted.",
+      "implementation_status": "Mobile UI Prototype",
+      "limitations": [
+        "Client prototype; live payment gateway processing is simulated.",
+        "Tested primarily on Android emulator and target devices."
+      ],
+      "results": [
+        {
+          "metric": "Client Platform",
+          "value": "Flutter / Dart targeting Android"
+        },
+        {
+          "metric": "Scope",
+          "value": "Catalog browsing, shopping cart state, order summary UI"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Ship-Flow-a-Flutter-app-for-Android",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 11,
+      "portfolio_classification": "full_stack",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "whatsapp-mimic",
+      "title": "Educational Messaging Client",
+      "slug": "whatsapp-mimic",
+      "short_description": "Educational chat client and automated launcher exploring local SQLite message storage and dependency automation.",
+      "overview": "An educational software exercise exploring the interface layout and local data structures of modern instant messengers, complete with an automated environment launcher.",
+      "problem": "Educational learners often struggle with dependency preparation and setting up local databases when exploring desktop GUI code.",
+      "solution": "Built an automated local setup launcher paired with a lightweight messaging GUI that manages contacts and local message histories in SQLite.",
+      "primary_service": "full-stack",
+      "capabilities": [
+        "desktop-mobile-educational",
+        "database-applications"
+      ],
+      "technologies": [
+        "Python",
+        "SQLite",
+        "GUI Framework",
+        "Shell Scripts"
+      ],
+      "contribution_level": "educational-exercise",
+      "personal_contribution": "Constructed automated dependency launcher scripts and local SQLite messaging persistence logic.",
+      "implementation_status": "Educational Demo",
+      "limitations": [
+        "Strictly an educational tutorial simulation; does not provide production networking robustness or mobile push notification services."
+      ],
+      "results": [
+        {
+          "metric": "Persistence",
+          "value": "Local SQLite database storage"
+        },
+        {
+          "metric": "Tooling",
+          "value": "Automated launcher for environment setup"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/WhatsApp-mimicking-application",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 12,
+      "portfolio_classification": "full_stack",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "sports-management",
+      "title": "Sports Club Management System",
+      "slug": "sports-management",
+      "short_description": "Java desktop system featuring domain modeling and a custom first-child/next-sibling Trie for prefix search.",
+      "overview": "A desktop management application written in Java featuring Swing GUI and domain data models (Sport, Club, Member). It is highlighted by a custom Trie data structure implementing efficient prefix search alongside dual-index lookups.",
+      "problem": "Prefix matching across large membership registries requires specialized index structures rather than naive linear table scans.",
+      "solution": "Implemented a custom Trie using a memory-efficient first-child/next-sibling representation alongside separate ID and name index tables.",
+      "primary_service": "algorithms-systems",
+      "capabilities": [
+        "data-structures",
+        "cs-fundamentals"
+      ],
+      "technologies": [
+        "Java 17",
+        "Swing GUI",
+        "Custom Trie",
+        "Algorithms"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Independently implemented custom Trie prefix tree, domain entities, Swing desktop user interface, and indexing search logic.",
+      "implementation_status": "Completed Systems Project",
+      "limitations": [
+        "In-memory data store with file persistence; does not currently run on external relational database server.",
+        "Benchmarking and comprehensive invariant test suites noted in early documentation remain open for future extension."
+      ],
+      "results": [
+        {
+          "metric": "Core Data Structure",
+          "value": "Custom Trie with first-child/next-sibling node pointers"
+        },
+        {
+          "metric": "Indexing",
+          "value": "Dual index tables for O(1) ID lookups and fast prefix matching"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Sport-management-system",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 13,
+      "portfolio_classification": "algorithms",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "game-of-life",
+      "title": "Conway's Game of Life Win32 Simulation",
+      "slug": "game-of-life",
+      "short_description": "Event-driven cellular automata engine written in C++ with double-buffered Win32 GDI rendering and boundary configuration.",
+      "overview": "A native desktop implementation of Conway's Game of Life in C++ utilizing the native Windows Win32 API. Emphasizes clean rendering loops, double-buffering, and configurable cellular boundary dynamics.",
+      "problem": "Direct GDI drawing on every tick causes heavy visual flickering and high CPU load during large-grid cellular iterations.",
+      "solution": "Implemented an off-screen memory device context (double buffering) for seamless rendering, bit-manipulation cell state evaluation, and configurable boundary rules (toroidal vs. bounded).",
+      "primary_service": "algorithms-systems",
+      "capabilities": [
+        "simulation",
+        "cs-fundamentals"
+      ],
+      "technologies": [
+        "C++",
+        "Win32 API",
+        "GDI",
+        "Algorithms",
+        "Double Buffering"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Authored native C++ Win32 event handling, off-screen device context double-buffering, and toroidal boundary condition calculations.",
+      "implementation_status": "Completed Desktop Application",
+      "limitations": [
+        "Built specifically for Windows platforms using native Win32/GDI calls; not cross-platform.",
+        "Optimized for standard desktop grid resolutions rather than massive parallelized compute shaders."
+      ],
+      "results": [
+        {
+          "metric": "Rendering Technique",
+          "value": "Off-screen double buffering with zero screen tearing"
+        },
+        {
+          "metric": "Boundary Modes",
+          "value": "Configurable toroidal wrap-around and hard wall edges"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/the-game-of-life-",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 14,
+      "portfolio_classification": "algorithms",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "numerical-analysis-heuristics",
+      "title": "Numerical Analysis Solver with Heuristic Optimization",
+      "slug": "numerical-analysis-heuristics",
+      "short_description": "Comparative linear system solver implementing Jacobi and Gauss-Seidel iterative methods with heuristic method selection.",
+      "overview": "A computational numerical analysis suite comparing iterative matrix methods for solving linear systems of equations (Ax = b). Evaluates convergence rates and applies heuristic criteria for choosing between Jacobi and Gauss-Seidel based on matrix properties.",
+      "problem": "Iterative solvers diverge or converge slowly when coefficient matrices lack diagonal dominance or when system dimensions alter resource trade-offs.",
+      "solution": "Implemented Jacobi and Gauss-Seidel iterative algorithms with residual monitoring, convergence checking, and a heuristic rule set that selects method parameters based on available iterations and matrix characteristics.",
+      "primary_service": "algorithms-systems",
+      "capabilities": [
+        "numerical-methods",
+        "cs-fundamentals"
+      ],
+      "technologies": [
+        "Python",
+        "NumPy",
+        "Linear Algebra",
+        "Scientific Computing"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Programmed iterative Jacobi and Gauss-Seidel matrix solvers, convergence testing, iteration counters, and heuristic decision rules.",
+      "implementation_status": "Completed Computational Study",
+      "limitations": [
+        "Heuristic rule selection optimizes practical convergence speed but does not formally prove mathematical optimality across arbitrary non-diagonally-dominant matrices."
+      ],
+      "results": [
+        {
+          "metric": "Algorithms Implemented",
+          "value": "Jacobi & Gauss-Seidel iterative solvers"
+        },
+        {
+          "metric": "Monitoring",
+          "value": "Residual error checking and iteration limit guards"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Numerical-Analysis-with-Heuristic",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [
+        "videos/Screen Recording 2026-10-15 191046.mp4"
+      ],
+      "featured": true,
+      "visibility": "public",
+      "sort_order": 15,
+      "portfolio_classification": "algorithms",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "cs50-projects",
+      "title": "CS50 Computer Science Foundations Collection",
+      "slug": "cs50-projects",
+      "short_description": "Curated collection of foundational programming implementations spanning C memory management, algorithms, and data structures.",
+      "overview": "A portfolio of completed coursework and exercises from Harvard CS50, demonstrating rigorous fundamentals in memory management, pointer arithmetic, linked lists, hash tables, and algorithm efficiency.",
+      "problem": "Modern high-level scripting abstracts away critical systems concepts: memory allocation, buffer safety, algorithmic complexity, and low-level data structures.",
+      "solution": "Implemented verified foundational exercises in C (pointers, dynamic memory, sorting algorithms, Trie dictionaries, hash tables), Python, and SQL.",
+      "primary_service": "algorithms-systems",
+      "capabilities": [
+        "cs-fundamentals",
+        "data-structures"
+      ],
+      "technologies": [
+        "C",
+        "Python",
+        "SQL",
+        "Data Structures",
+        "Algorithms"
+      ],
+      "contribution_level": "educational-exercise",
+      "personal_contribution": "Independently solved and implemented foundational programming exercises adhering to strict memory safety and correctness specifications.",
+      "implementation_status": "Completed Academic Portfolio",
+      "limitations": [
+        "Structured educational curriculum projects designed to establish computer science fundamentals rather than standalone commercial products."
+      ],
+      "results": [
+        {
+          "metric": "Foundations",
+          "value": "C memory management, Valgrind memory leak verification, Big-O analysis"
+        },
+        {
+          "metric": "Data Structures",
+          "value": "Linked lists, hash tables, prefix trees (Trie), binary search trees"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/cs50x-projects",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 16,
+      "portfolio_classification": "educational",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "data-analysis-collection",
+      "title": "Applied Data Analysis & Classification Experiments",
+      "slug": "data-analysis-collection",
+      "short_description": "Curated laboratory experiments exploring classical classification benchmarks, categorical encoding pipelines, and cross-validation.",
+      "overview": "A series of applied data analysis and machine learning training notebooks analyzing benchmark datasets (Titanic survival, Breast Cancer diagnostics, and customer metrics) to refine preprocessing and feature selection techniques.",
+      "problem": "Practical machine learning requires understanding how different encoding schemes, scaling methods, and model families behave on diverse data distributions.",
+      "solution": "Built reproducible exploratory workflows exploring missing-data imputation, feature correlations, and comparative evaluation metrics across classical classification baselines.",
+      "primary_service": "data-ml",
+      "capabilities": [
+        "data-cleaning",
+        "eda-visualization",
+        "predictive-ml"
+      ],
+      "technologies": [
+        "Python",
+        "Pandas",
+        "Scikit-Learn",
+        "Matplotlib",
+        "Seaborn"
+      ],
+      "contribution_level": "educational-exercise",
+      "personal_contribution": "Conducted data exploration, feature transformation experiments, baseline model training, and performance evaluation.",
+      "implementation_status": "Completed Laboratory Collection",
+      "limitations": [
+        "Composed of educational experiments on canonical reference datasets rather than proprietary production data."
+      ],
+      "results": [
+        {
+          "metric": "Datasets Explored",
+          "value": "Titanic, Breast Cancer, Customer Demographics"
+        },
+        {
+          "metric": "Focus",
+          "value": "Imputation strategies, feature correlations, cross-validation metrics"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Training-and-small-projects",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 17,
+      "portfolio_classification": "educational",
+      "verification_status": "verified_source"
+    },
+    {
+      "id": "roadmap-tracker",
+      "title": "Developer Roadmap & Learning Tracker",
+      "slug": "roadmap-tracker",
+      "short_description": "Personal technical skill tracker managing engineering learning trajectories, milestones, and project prerequisites.",
+      "overview": "A web utility tracking engineering competencies, technology learning goals, study milestones, and prerequisite dependencies.",
+      "problem": "Self-directed technical education requires systematic tracking of skill dependencies and verified project deliverables.",
+      "solution": "Built a structured tracking web interface to record learning progress, manage roadmap nodes, and document finished artifacts.",
+      "primary_service": "full-stack",
+      "capabilities": [
+        "backend-dev",
+        "database-applications"
+      ],
+      "technologies": [
+        "Python",
+        "Flask",
+        "SQLite",
+        "HTML/CSS"
+      ],
+      "contribution_level": "primarily-self-implemented",
+      "personal_contribution": "Developed backend tracking routes, milestone data model, and web UI for milestone management.",
+      "implementation_status": "Personal Utility",
+      "limitations": [
+        "Personal development tool designed for individual tracking without multi-user sharing."
+      ],
+      "results": [
+        {
+          "metric": "Tracking System",
+          "value": "Categorized skill milestones and dependency mapping"
+        }
+      ],
+      "repository_url": "https://github.com/Amr-Ahmad-dev/Roadmap-tracker",
+      "demo_url": "",
+      "documentation_url": "",
+      "screenshots": [],
+      "videos": [],
+      "featured": false,
+      "visibility": "public",
+      "sort_order": 18,
+      "portfolio_classification": "educational",
+      "verification_status": "verified_source"
+    }
+  ],
+  "cs50_assignments": [
+    {
+      "id": "cs50-w1-cash",
+      "week": 1,
+      "name": "Cash (Greedy Algorithm)",
+      "language": "C",
+      "path": "w1/Cashe",
+      "concept": "Greedy algorithms, minimum coin calculation"
+    },
+    {
+      "id": "cs50-w1-credit",
+      "week": 1,
+      "name": "Credit (Luhn Algorithm)",
+      "language": "C",
+      "path": "w1/credits",
+      "concept": "Checksum calculation, card validation"
+    },
+    {
+      "id": "cs50-w1-mario-easy",
+      "week": 1,
+      "name": "Mario Less",
+      "language": "C",
+      "path": "w1/Mario Easy",
+      "concept": "Nested loops, CLI formatting"
+    },
+    {
+      "id": "cs50-w1-mario-hard",
+      "week": 1,
+      "name": "Mario More",
+      "language": "C",
+      "path": "w1/Mario hard",
+      "concept": "Symmetric pyramid generation"
+    },
+    {
+      "id": "cs50-w2-caesar",
+      "week": 2,
+      "name": "Caesar Cipher",
+      "language": "C",
+      "path": "w2/Caesar",
+      "concept": "Modular arithmetic, character rotation"
+    },
+    {
+      "id": "cs50-w2-substitution",
+      "week": 2,
+      "name": "Substitution Cipher",
+      "language": "C",
+      "path": "w2/Substitution",
+      "concept": "Key validation, bijective character mapping"
+    },
+    {
+      "id": "cs50-w2-readability",
+      "week": 2,
+      "name": "Readability (Coleman-Liau)",
+      "language": "C",
+      "path": "w2/Readability",
+      "concept": "Text analysis, Coleman-Liau readability index"
+    },
+    {
+      "id": "cs50-w2-scrabble",
+      "week": 2,
+      "name": "Scrabble",
+      "language": "C",
+      "path": "w2/scrabble",
+      "concept": "Array lookups, score calculation"
+    },
+    {
+      "id": "cs50-w3-plurality",
+      "week": 3,
+      "name": "Plurality Voting",
+      "language": "C",
+      "path": "w3/plurality",
+      "concept": "Linear search, candidate vote tallying"
+    },
+    {
+      "id": "cs50-w3-runoff",
+      "week": 3,
+      "name": "Runoff Voting",
+      "language": "C",
+      "path": "w3/runoff",
+      "concept": "Instant-runoff election mechanics"
+    },
+    {
+      "id": "cs50-w3-tideman",
+      "week": 3,
+      "name": "Tideman (Ranked Pairs)",
+      "language": "C",
+      "path": "w3/tideman",
+      "concept": "Directed graphs, cycle detection, topological sorting"
+    },
+    {
+      "id": "cs50-w4-filter-more",
+      "week": 4,
+      "name": "Image Filter (More)",
+      "language": "C",
+      "path": "w4/filter-more",
+      "concept": "2D matrix kernels, Sobel operator, edge detection, blur"
+    },
+    {
+      "id": "cs50-w4-recover",
+      "week": 4,
+      "name": "JPEG Recovery",
+      "language": "C",
+      "path": "w4/recover",
+      "concept": "Raw memory traversal, FAT block reconstruction, file signatures"
+    },
+    {
+      "id": "cs50-w4-volume",
+      "week": 4,
+      "name": "WAV Volume Scaling",
+      "language": "C",
+      "path": "w4/volume",
+      "concept": "Binary stream scaling, 16-bit audio sample manipulation"
+    },
+    {
+      "id": "cs50-w5-inheritance",
+      "week": 5,
+      "name": "Blood Type Inheritance",
+      "language": "C",
+      "path": "w5/inheritance",
+      "concept": "Recursive tree structures, dynamic allocation, pointer deallocation"
+    },
+    {
+      "id": "cs50-w5-speller",
+      "week": 5,
+      "name": "Speller (Hash Table)",
+      "language": "C",
+      "path": "w5/speller",
+      "concept": "High-performance hash table, collision resolution, Valgrind clean"
+    },
+    {
+      "id": "cs50-w6-dna",
+      "week": 6,
+      "name": "DNA Profiling",
+      "language": "Python",
+      "path": "w6/dna",
+      "concept": "Short tandem repeat (STR) pattern matching"
+    },
+    {
+      "id": "cs50-w7-fiftyville",
+      "week": 7,
+      "name": "Fiftyville Mystery",
+      "language": "SQL",
+      "path": "w7",
+      "concept": "Relational joins, timeline cross-referencing"
+    },
+    {
+      "id": "cs50-w8-homepage",
+      "week": 8,
+      "name": "Personal Homepage",
+      "language": "HTML/CSS/JS",
+      "path": "w8/homepage",
+      "concept": "Semantic web, responsive layout, DOM manipulation"
+    },
+    {
+      "id": "cs50-w9-finance",
+      "week": 9,
+      "name": "CS50 Finance",
+      "language": "Python/Flask/SQL",
+      "path": "w9/finance",
+      "concept": "Full-stack financial ledger, transactions, external API quote lookup"
+    },
+    {
+      "id": "cs50-w9-birthdays",
+      "week": 9,
+      "name": "Birthdays Tracker",
+      "language": "Python/Flask/SQL",
+      "path": "w9/birthdays",
+      "concept": "CRUD operations, database persistence"
+    }
+  ],
+  "services": [
+    {
+      "id": "data-ml",
+      "title": "Data Analytics & Machine Learning",
+      "description": "From raw data to useful insight and predictive models, I build Python-based workflows for acquiring, preparing, analyzing, and modeling data.",
+      "eligible": true,
+      "evidence_project_ids": [
+        "chronic-disease-ml",
+        "car-price-analysis",
+        "nvidia-stock-prediction",
+        "employee-prediction",
+        "web-scraping"
+      ],
+      "eligibility_reason": "Supported by multiple verified projects demonstrating end-to-end data pipelines, regression, and classification.",
+      "subservices": [
+        {
+          "id": "data-acquisition",
+          "title": "Data Acquisition & Web Scraping",
+          "eligible": true,
+          "supporting_projects": [
+            "web-scraping",
+            "nvidia-stock-prediction"
+          ]
+        },
+        {
+          "id": "data-cleaning",
+          "title": "Data Cleaning & Preprocessing",
+          "eligible": true,
+          "supporting_projects": [
+            "chronic-disease-ml",
+            "car-price-analysis",
+            "employee-prediction"
+          ]
+        },
+        {
+          "id": "eda-visualization",
+          "title": "Exploratory Data Analysis & Visualization",
+          "eligible": true,
+          "supporting_projects": [
+            "chronic-disease-ml",
+            "car-price-analysis",
+            "employee-prediction"
+          ]
+        },
+        {
+          "id": "predictive-ml",
+          "title": "Predictive Machine Learning",
+          "eligible": true,
+          "supporting_projects": [
+            "chronic-disease-ml",
+            "car-price-analysis",
+            "nvidia-stock-prediction"
+          ]
+        },
+        {
+          "id": "model-packaging",
+          "title": "Model Packaging & Integration",
+          "eligible": true,
+          "supporting_projects": [
+            "chronic-disease-ml",
+            "nvidia-stock-prediction"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-engineering",
+      "title": "AI Engineering & NLP Solutions",
+      "description": "Practical integration of AI capabilities, NLP text classification, and API-driven workflows into real-world applications.",
+      "eligible": true,
+      "evidence_project_ids": [
+        "nlp-grammar-correction"
+      ],
+      "eligibility_reason": "Supported by DEPI NLP project demonstrating sequence models and text correction.",
+      "subservices": [
+        {
+          "id": "nlp-text-processing",
+          "title": "NLP & Text Processing",
+          "eligible": true,
+          "supporting_projects": [
+            "nlp-grammar-correction"
+          ]
+        },
+        {
+          "id": "ai-api-integration",
+          "title": "AI API Integration",
+          "eligible": true,
+          "supporting_projects": [
+            "dejavu"
+          ]
+        },
+        {
+          "id": "rag-systems",
+          "title": "RAG & Retrieval Systems",
+          "eligible": false,
+          "supporting_projects": [],
+          "disabled_reason": "No dedicated production RAG implementation verified in current audit"
+        },
+        {
+          "id": "ai-agents-workflows",
+          "title": "Autonomous AI Agents",
+          "eligible": false,
+          "supporting_projects": [],
+          "disabled_reason": "Experimental only; no verified commercial agent implementation"
+        }
+      ]
+    },
+    {
+      "id": "full-stack",
+      "title": "Full-Stack Application Development",
+      "description": "Database-backed web applications connecting robust backends with responsive interfaces.",
+      "eligible": true,
+      "evidence_project_ids": [
+        "ledger",
+        "dejavu",
+        "habit-quest",
+        "message-connect",
+        "shop-flow"
+      ],
+      "eligibility_reason": "Supported by complete Ledger platform, Flutter mobile prototypes, and Flask web applications.",
+      "subservices": [
+        {
+          "id": "backend-dev",
+          "title": "Backend Development (Flask / Python)",
+          "eligible": true,
+          "supporting_projects": [
+            "ledger",
+            "habit-quest"
+          ]
+        },
+        {
+          "id": "database-applications",
+          "title": "Database-Driven Applications (SQLite / SQL)",
+          "eligible": true,
+          "supporting_projects": [
+            "ledger",
+            "message-connect"
+          ]
+        },
+        {
+          "id": "fullstack-web",
+          "title": "Full-Stack Web Interfaces",
+          "eligible": true,
+          "supporting_projects": [
+            "ledger"
+          ]
+        },
+        {
+          "id": "desktop-mobile-educational",
+          "title": "Mobile & Desktop Prototypes",
+          "eligible": true,
+          "supporting_projects": [
+            "dejavu",
+            "shop-flow",
+            "sports-management"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "algorithms-systems",
+      "title": "Scientific Computing & Custom Systems",
+      "description": "Algorithmic implementations, numerical methods, and custom data structures for specific computing tasks.",
+      "eligible": true,
+      "evidence_project_ids": [
+        "numerical-analysis-heuristics",
+        "game-of-life",
+        "sports-management"
+      ],
+      "eligibility_reason": "Supported by numerical solvers, custom Trie indexing, and Win32 simulation engine.",
+      "subservices": [
+        {
+          "id": "numerical-methods",
+          "title": "Numerical Methods & Solvers",
+          "eligible": true,
+          "supporting_projects": [
+            "numerical-analysis-heuristics"
+          ]
+        },
+        {
+          "id": "simulation",
+          "title": "Simulation & Graphic Engines",
+          "eligible": true,
+          "supporting_projects": [
+            "game-of-life"
+          ]
+        },
+        {
+          "id": "data-structures",
+          "title": "Custom Data Structures & Prefix Trees",
+          "eligible": true,
+          "supporting_projects": [
+            "sports-management"
+          ]
+        }
+      ]
+    }
+  ],
+  "audit_metadata": {
+    "auditor": "Antigravity Evidence Auditor",
+    "audit_timestamp": "2026-10-16T21:20:00Z",
+    "account": "Amr-Ahmad-dev",
+    "total_repositories_inspected": 18,
+    "total_projects_cataloged": 18,
+    "total_cs50_assignments_cataloged": 21
+  }
+}
