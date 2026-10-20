@@ -61,18 +61,21 @@ IS GIVEN AT THE VERY BOTTOM, IN THE "REVIEW NOTES" DOCSTRING, WITH LINE
 REFERENCES, SO YOU CAN AUDIT THEM WITHOUT RE-READING THE WHOLE FILE.
 """
 
-from __future__ import annotations
-
 import os
 from enum import IntEnum
 from functools import wraps
-from pickle import TUPLE
 from typing import Callable, Iterable, Optional
+
+# Load .env file if present (python-dotenv optional dependency)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 from flask import (
     Flask,
     abort,
-    app,
     flash,
     jsonify,
     redirect,
@@ -81,8 +84,7 @@ from flask import (
     session,
     url_for,
 )
-from flask.config import T
-
+import modules.sql_helper_dictionary as sql_h
 import modules.auth as auth
 import modules.profile as profile
 import modules.students as students
@@ -112,16 +114,19 @@ import modules.moderation as moderation
 
 class Config:
     """All Flask configuration in one place, env-driven with local defaults."""
-    EMAIL_ADDRESS = "studentflowapp2026@gmail.com"
-    EMAIL_PASSWORD = "fapj zqss msrq qupf"
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-key-change-me")
+    EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS", "studentflowapp2026@gmail.com")
+    EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD", "")
+    SECRET_KEY = os.environ.get("SECRET_KEY", os.urandom(32).hex())
     SESSION_TYPE = "filesystem"
     SESSION_PERMANENT = False
     SESSION_FILE_DIR = os.environ.get("SESSION_FILE_DIR", "./.flask_session")
-    MAX_CONTENT_LENGTH = 64 * 1024 * 1024  # 64MB upload ceiling; tune later
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = os.environ.get("FLASK_ENV") == "production"
+    MAX_CONTENT_LENGTH = 64 * 1024 * 1024  # 64MB upload ceiling
     DEBUG = os.environ.get("FLASK_DEBUG", "0") == "1"
     years = [1, 2, 3, 4]
-    semesters = [1, 2, 3]
+    semesters = [1, 2]
 
 
 class Features:
@@ -470,6 +475,14 @@ def create_app() -> Flask:
     register_error_handlers(app)
     register_routes(app)
 
+    @app.after_request
+    def set_security_headers(response):
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
+
     @app.context_processor
     def inject_user_session():
         return dict(UserSession=UserSession)
@@ -560,10 +573,12 @@ def _register_auth_routes(app: Flask) -> None:
                     user_id=is_user["id"],
                     email=is_user["email"],
                     authority=Authority(is_user["status"]),
-                    state=AccountState.ACTIVE if is_user["approved"] else AccountState.NOT_APPROVED,
+                    state=AccountState(is_user.get("state", 0)),
                     profile_id=is_user.get("profile", {}).get("p_id"),
-                    warning_state=is_user.get("state", None),
-                    warning_count=is_user.get("warning_count", None),
+                    warning_state=is_user.get("state", 0),
+                    warning_count=is_user.get("warning_count", 0),
+                    _NAME=is_user.get("profile", {}).get("name", ""),
+                    avatar=is_user.get("profile", {}).get("avatar", ""),
                 )
                 flash_success("Logged in successfully.")
                 next_url = request.args.get("next")
@@ -706,6 +721,53 @@ def _register_student_routes(app: Flask) -> None:
         if data is None:
             abort(404)
         return render_template("student/overview.html", student=data)
+
+    @app.route("/gpa-calculator", methods=["GET", "POST"])
+    @login_required
+    def gpa_calculator():
+        user_id = UserSession.user_id()
+        if request.method == "POST":
+            subject_id = request.form.get("subject_id", type=int)
+            year = request.form.get("year", type=int) or 1
+            semester = request.form.get("semester", type=int) or 1
+            grade_val = request.form.get("grade", type=float)
+            letter = request.form.get("letter", "").strip().upper() or None
+            hours = request.form.get("hours_studied", type=float) or 0.0
+
+            if not subject_id or grade_val is None:
+                flash_error("Please select a valid subject and enter a grade.")
+                return redirect(url_for("gpa_calculator"))
+
+            ok, err = students.save_student_grade(
+                user_id, subject_id, year, semester, grade_val, letter, hours
+            )
+            if not ok:
+                flash_error(err or "Failed to record course grade.")
+            else:
+                flash_success("Course grade and GPA updated successfully.")
+            return redirect(url_for("gpa_calculator"))
+
+        all_subjects = subjects.list_subjects(user_id=user_id)
+        grades_data = students.get_student_grades(user_id)
+        user_prof = profile.get_profile(user_id) or {}
+
+        return render_template(
+            "student/gpa_calculator.html",
+            subjects=all_subjects,
+            grades_data=grades_data,
+            profile=user_prof
+        )
+
+    @app.route("/gpa-calculator/delete/<int:grade_id>", methods=["POST"])
+    @login_required
+    def gpa_delete_grade(grade_id: int):
+        user_id = UserSession.user_id()
+        ok, err = students.delete_student_grade(user_id, grade_id)
+        if not ok:
+            flash_error(err or "Could not delete grade record.")
+        else:
+            flash_success("Grade entry removed and GPA recalculated.")
+        return redirect(url_for("gpa_calculator"))
 
 
 # -----------------------------------------------------------------------
@@ -1281,6 +1343,7 @@ def _register_favorite_routes(app: Flask) -> None:
                 
                 data.append({
                     "entity_id": ent_id,
+                    "subject_id": it.get("subject_id"),
                     "type": norm_type,
                     "name": name,
                     "favorited_at": it.get("favorited_at")

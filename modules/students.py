@@ -78,3 +78,120 @@ def get_student(student_id):
     except Exception as e:
         print(f"Error getting student detail: {e}")
         return None
+
+
+def get_student_grades(p_id: int):
+    """Retrieves all grade records for a student along with subject information."""
+    try:
+        with sql_h.get_db("main.db") as conn:
+            c = conn.cursor()
+            c.execute("""
+                SELECT sg.*, s.name as subject_name, s.code as subject_code, s.credits
+                FROM student_grades sg
+                JOIN subjects s ON sg.subject_id = s.id
+                WHERE sg.p_id = ?
+                ORDER BY sg.year ASC, sg.semester ASC, s.name ASC
+            """, (p_id,))
+            grades = [dict(r) for r in c.fetchall()]
+            
+            total_credits = sum(g.get("credits") or 3 for g in grades)
+            total_points = sum((g.get("grade") or 0.0) * (g.get("credits") or 3) for g in grades)
+            cumulative_gpa = round(total_points / total_credits, 2) if total_credits > 0 else 0.0
+
+            # Semester breakdown
+            semesters = {}
+            for g in grades:
+                key = f"Year {g['year']}, Sem {g['semester']}"
+                if key not in semesters:
+                    semesters[key] = {"courses": [], "credits": 0, "points": 0.0, "gpa": 0.0}
+                cred = g.get("credits") or 3
+                semesters[key]["courses"].append(g)
+                semesters[key]["credits"] += cred
+                semesters[key]["points"] += (g.get("grade") or 0.0) * cred
+
+            for key, sem in semesters.items():
+                if sem["credits"] > 0:
+                    sem["gpa"] = round(sem["points"] / sem["credits"], 2)
+
+            return {
+                "grades": grades,
+                "cumulative_gpa": cumulative_gpa,
+                "total_credits": total_credits,
+                "semesters": semesters
+            }
+    except Exception as e:
+        print(f"Error getting student grades: {e}")
+        return {"grades": [], "cumulative_gpa": 0.0, "total_credits": 0, "semesters": {}}
+
+
+def save_student_grade(p_id: int, subject_id: int, year: int, semester: int, grade: float, letter: str = None, hours_studied: float = 0.0):
+    """Saves or updates a student grade and updates the student's profile average GPA."""
+    try:
+        # Determine letter from grade if not supplied
+        if not letter:
+            if grade >= 3.85: letter = "A"
+            elif grade >= 2.85: letter = "B"
+            elif grade >= 1.85: letter = "C"
+            elif grade >= 0.85: letter = "D"
+            else: letter = "F"
+
+        with sql_h.get_db("main.db") as conn:
+            c = conn.cursor()
+            c.execute("""
+                INSERT INTO student_grades (p_id, subject_id, year, semester, letter, grade, hours_studied)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(p_id, subject_id, year, semester) DO UPDATE SET
+                    letter = excluded.letter,
+                    grade = excluded.grade,
+                    hours_studied = excluded.hours_studied
+            """, (p_id, subject_id, int(year), int(semester), letter, float(grade), float(hours_studied or 0.0)))
+
+            # Recalculate average GPA
+            c.execute("""
+                SELECT sg.grade, s.credits
+                FROM student_grades sg
+                JOIN subjects s ON sg.subject_id = s.id
+                WHERE sg.p_id = ?
+            """, (p_id,))
+            all_grades = c.fetchall()
+            if all_grades:
+                tot_cred = sum(r["credits"] or 3 for r in all_grades)
+                tot_pts = sum(r["grade"] * (r["credits"] or 3) for r in all_grades)
+                new_avg = round(tot_pts / tot_cred, 2) if tot_cred > 0 else 0.0
+                c.execute("UPDATE profiles SET average_gpa = ? WHERE p_id = ?", (new_avg, p_id))
+
+            conn.commit()
+            return True, None
+    except Exception as e:
+        print(f"Error saving student grade: {e}")
+        return False, str(e)
+
+
+def delete_student_grade(p_id: int, grade_id: int):
+    """Deletes a student grade entry and refreshes profile average GPA."""
+    try:
+        with sql_h.get_db("main.db") as conn:
+            c = conn.cursor()
+            c.execute("DELETE FROM student_grades WHERE id = ? AND p_id = ?", (grade_id, p_id))
+
+            # Recalculate average GPA
+            c.execute("""
+                SELECT sg.grade, s.credits
+                FROM student_grades sg
+                JOIN subjects s ON sg.subject_id = s.id
+                WHERE sg.p_id = ?
+            """, (p_id,))
+            all_grades = c.fetchall()
+            new_avg = None
+            if all_grades:
+                tot_cred = sum(r["credits"] or 3 for r in all_grades)
+                tot_pts = sum(r["grade"] * (r["credits"] or 3) for r in all_grades)
+                new_avg = round(tot_pts / tot_cred, 2) if tot_cred > 0 else 0.0
+            c.execute("UPDATE profiles SET average_gpa = ? WHERE p_id = ?", (new_avg, p_id))
+
+            conn.commit()
+            return True, None
+    except Exception as e:
+        print(f"Error deleting student grade: {e}")
+        return False, str(e)
+
