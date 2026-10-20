@@ -43,7 +43,8 @@
 
 {% if notifications %}
     <div class="list">
-        {% for n in notifications.values() %}
+        {% set notification_items = notifications.values() if notifications is mapping else notifications %}
+        {% for n in notification_items %}
         <!-- Clicking this card submits the hidden form to mark as read -->
         <div class="card {% if not n.is_read %}unread{% endif %}" onclick="markRead('form_{{ n.id }}')">
             <div class="icon-box">

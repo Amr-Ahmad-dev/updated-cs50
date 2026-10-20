@@ -1,0 +1,153 @@
+﻿{% extends "layout.html" %}
+
+{% block title %}Edit Subject — {{ subject.name }}{% endblock %}
+{% block main_class %}container{% endblock %}
+
+{% block page_style %}
+<style>
+  .view-wrapper {
+    animation: fadeIn 0.4s ease-out forwards;
+    padding-bottom: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .page-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+  }
+  .page-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 8px 0;
+  }
+  .page-header p {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0;
+  }
+  .form-panel {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    box-shadow: var(--shadow-sm);
+  }
+  .form-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 20px;
+  }
+  .full-width {
+    grid-column: 1 / -1;
+  }
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .field-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .required {
+    color: var(--danger);
+  }
+  .form-control {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14.5px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background-color: var(--surface);
+    color: var(--ink);
+    transition: all var(--transition-fast);
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    grid-column: 1 / -1;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="view-wrapper">
+  <header class="page-header">
+    <h2>Edit Subject</h2>
+    <p>Update curriculum specifications for <strong>{{ subject.code }} - {{ subject.name }}</strong>.</p>
+  </header>
+
+  <section class="form-panel">
+    <form action="{{ url_for('subject_edit', subject_id=subject.id) }}" method="POST" class="form-layout">
+      
+      <div class="field-group full-width">
+        <label for="name">Subject Name <span class="required">*</span></label>
+        <input type="text" id="name" name="name" class="form-control" value="{{ subject.name }}" required>
+      </div>
+
+      <div class="field-group">
+        <label for="code">Subject Code <span class="required">*</span></label>
+        <input type="text" id="code" name="code" class="form-control" value="{{ subject.code }}" required>
+      </div>
+
+      <div class="field-group">
+        <label for="credits">Academic Credits <span class="required">*</span></label>
+        <input type="number" id="credits" name="credits" class="form-control" value="{{ subject.credits }}" min="0" step="0.5" required>
+      </div>
+
+      <div class="field-group">
+        <label for="year">Academic Year <span class="required">*</span></label>
+        <select id="year" name="year" class="form-control" required>
+          {% for y in [1, 2, 3, 4] %}
+            <option value="{{ y }}" {% if subject.year == y %}selected{% endif %}>Year {{ y }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label for="semester">Semester <span class="required">*</span></label>
+        <select id="semester" name="semester" class="form-control" required>
+          <option value="1" {% if subject.semester == 1 %}selected{% endif %}>Semester 1</option>
+          <option value="2" {% if subject.semester == 2 %}selected{% endif %}>Semester 2</option>
+        </select>
+      </div>
+
+      <div class="field-group full-width">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" class="form-control" rows="3">{{ subject.description or '' }}</textarea>
+      </div>
+
+      <div class="field-group full-width">
+        <label for="conditions_for_enrollment">Prerequisites / Conditions</label>
+        <input type="text" id="conditions_for_enrollment" name="conditions_for_enrollment" class="form-control" value="{{ subject.conditions_for_enrollment or '' }}">
+      </div>
+
+      <div class="field-group full-width">
+        <label for="links">Resource Links</label>
+        <input type="text" id="links" name="links" class="form-control" value="{{ subject.links or '' }}">
+      </div>
+
+      <div class="form-actions">
+        <a href="{{ url_for('subject_detail', subject_id=subject.id) }}" class="btn btn--ghost">Cancel</a>
+        <button type="submit" class="btn btn--primary">Update Subject</button>
+      </div>
+    </form>
+  </section>
+</div>
+{% endblock %}

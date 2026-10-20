@@ -186,12 +186,20 @@
 
 <div class="quick-actions">
   <a href="{{ url_for('subject_list') }}" class="btn btn--primary">Browse Subjects</a>
+  {% if is_professor %}
+    <a href="{{ url_for('professor_subjects') }}" class="btn btn--ghost">My Courses</a>
+    <a href="{{ url_for('professor_materials') }}" class="btn btn--ghost">Course Materials</a>
+  {% else %}
+    <a href="{{ url_for('favorite_list') }}" class="btn btn--ghost">Favorites</a>
+    {% if not is_admin %}
+      <a href="{{ url_for('gpa_calculator') }}" class="btn btn--ghost">GPA Calculator</a>
+    {% endif %}
+  {% endif %}
   <a href="{{ url_for('note_add') }}" class="btn btn--ghost">
     <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
     Add a Note
   </a>
   <a href="{{ url_for('my_notes') }}" class="btn btn--ghost">My Notes</a>
-  <a href="{{ url_for('favorite_list') }}" class="btn btn--ghost">Favorites</a>
   <a href="{{ url_for('message_list') }}" class="btn btn--ghost">
     Messages {% if unread_message_count > 0 %}<span class="chip" style="padding: 2px 6px; font-size: 10px; background: var(--accent); color: var(--accent-ink);">{{ unread_message_count }}</span>{% endif %}
   </a>
@@ -199,7 +207,8 @@
 
 <div class="dash-grid">
 
-  <!-- Favorites Section -->
+  {% if not is_professor %}
+  <!-- Favorites Section (Students & Admins) -->
   <div class="record dash-card">
     <span class="record__tab">Starred Items</span>
     <div class="dash-card__head">
@@ -219,6 +228,26 @@
     <div class="dash-empty">No favorites yet. Star a subject from its page to keep it here.</div>
     {% endif %}
   </div>
+  {% else %}
+  <!-- Faculty Teaching Hub (Professors) -->
+  <div class="record dash-card">
+    <span class="record__tab">Teaching Workspace</span>
+    <div class="dash-card__head">
+      <h3>Faculty Resources</h3>
+      <a href="{{ url_for('professor_dashboard') }}">Workspace →</a>
+    </div>
+    <div class="dash-list">
+      <a class="dash-row" href="{{ url_for('professor_subjects') }}">
+        <span class="dash-row__code">COURSES</span>
+        <span class="dash-row__title">Manage Assigned Subject Modules</span>
+      </a>
+      <a class="dash-row" href="{{ url_for('professor_materials') }}">
+        <span class="dash-row__code">MATERIALS</span>
+        <span class="dash-row__title">Uploaded Course Materials &amp; Syllabi</span>
+      </a>
+    </div>
+  </div>
+  {% endif %}
 
   <!-- Notifications -->
   <div class="record dash-card">

@@ -520,11 +520,16 @@
     <div class="nav__links">
       <a class="nav__link" href="{{ url_for('home') }}">Home</a>
       <a class="nav__link" href="{{ url_for('subject_list') }}">Subjects</a>
-      <a class="nav__link" href="{{ url_for('favorite_list') }}">Favorites</a>
-      <a class="nav__link" href="{{ url_for('my_notes') }}">My_notes</a>
+      {% if session.get('authority') != 7 %}
+        <a class="nav__link" href="{{ url_for('favorite_list') }}">Favorites</a>
+      {% endif %}
+      {% if session.get('authority') == 1 %}
+        <a class="nav__link" href="{{ url_for('gpa_calculator') }}">GPA Calculator</a>
+      {% endif %}
+      <a class="nav__link" href="{{ url_for('my_notes') }}">Notes</a>
       {% if Features is defined and Features.ENABLE_EVENTS %}<a class="nav__link" href="{{ url_for('event_list') }}">Calendar</a>{% endif %}
-      {% if session.get('authority') == 7 %}<a class="nav__link" href="{{ url_for('professor_dashboard') }}">Professor tools</a>{% endif %}
-      {% if session.get('authority') and session.get('authority') >= 2 %}<a class="nav__link" href="{{ url_for('admin_dashboard') }}">Admin</a>{% endif %}
+      {% if session.get('authority') == 7 %}<a class="nav__link" href="{{ url_for('professor_dashboard') }}">Faculty Tools</a>{% endif %}
+      {% if session.get('authority') and session.get('authority') >= 2 and session.get('authority') <= 6 %}<a class="nav__link" href="{{ url_for('admin_dashboard') }}">Admin Portal</a>{% endif %}
     </div>
     {% endif %}
 
@@ -567,10 +572,15 @@
   <div class="mobile-menu" id="mobileMenu">
     <a class="nav__link" href="{{ url_for('home') }}">Home</a>
     <a class="nav__link" href="{{ url_for('subject_list') }}">Subjects</a>
-    <a class="nav__link" href="{{ url_for('favorite_list') }}">Favorites</a>
-    <a class="nav__link" href="{{ url_for('my_notes') }}">My notes</a>
-    {% if session.get('authority') == 7 %}<a class="nav__link" href="{{ url_for('professor_dashboard') }}">Professor tools</a>{% endif %}
-    {% if session.get('authority') and session.get('authority') >= 2 %}<a class="nav__link" href="{{ url_for('admin_dashboard') }}">Admin</a>{% endif %}
+    {% if session.get('authority') != 7 %}
+      <a class="nav__link" href="{{ url_for('favorite_list') }}">Favorites</a>
+    {% endif %}
+    {% if session.get('authority') == 1 %}
+      <a class="nav__link" href="{{ url_for('gpa_calculator') }}">GPA Calculator</a>
+    {% endif %}
+    <a class="nav__link" href="{{ url_for('my_notes') }}">Notes</a>
+    {% if session.get('authority') == 7 %}<a class="nav__link" href="{{ url_for('professor_dashboard') }}">Faculty Tools</a>{% endif %}
+    {% if session.get('authority') and session.get('authority') >= 2 and session.get('authority') <= 6 %}<a class="nav__link" href="{{ url_for('admin_dashboard') }}">Admin Portal</a>{% endif %}
   </div>
   {% endif %}
 </header>

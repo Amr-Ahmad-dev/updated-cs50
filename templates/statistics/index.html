@@ -1,80 +1,219 @@
-{% extends "layout.html" %}
+﻿{% extends "layout.html" %}
 {% block title %}Course Statistics — {{ subject.code if subject else 'Analytics' }}{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js for Educational Visualizations -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="record" style="padding: 32px;">
   <span class="record__tab">Academic Statistics</span>
 
+  <!-- Header -->
   <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
     <div>
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-        <span class="chip" style="font-weight: 600;">{{ subject.code }}</span>
-        <span class="mono" style="font-size: 13px; color: var(--ink-faint);">Year {{ subject.year }}, Term {{ subject.semester }}</span>
+        <span class="chip" style="font-weight: 700; color: var(--accent); background: var(--accent-soft);">{{ subject.code }}</span>
+        <span class="mono" style="font-size: 13px; color: var(--ink-faint);">Year {{ subject.year }}, Semester {{ subject.semester }}</span>
       </div>
-      <h1 style="font-size: 30px; margin-bottom: 6px;">{{ subject.name }} Grade &amp; Performance Statistics</h1>
-      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Aggregated grade distributions, average GPA, hours studied, and student completion metrics.</p>
+      <h1 style="font-size: 30px; font-weight: 700; color: var(--ink); margin: 0 0 6px 0;">{{ subject.name }} — Performance Analytics</h1>
+      <p style="color: var(--ink-soft); margin: 0; font-size: 14.5px;">Curriculum benchmarks, letter grade distributions, and historical student achievement data.</p>
     </div>
-    <a href="{{ url_for('subject_detail', subject_id=subject.id) }}" class="btn btn--ghost">&larr; Subject Hub</a>
+    <a href="{{ url_for('subject_detail', subject_id=subject.id) }}" class="btn btn--outline">&larr; Return to Subject Hub</a>
   </div>
 
   <!-- KPI Metric Cards -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
-    <div class="card" style="padding: 20px; text-align: center;">
-      <span class="detail__label">Average Course GPA</span>
-      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--ink); margin-top: 4px;">
-        {{ stats.average_gpa or 'N/A' }}
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    
+    <div class="card" style="padding: 22px; text-align: center; border-radius: var(--radius-lg);">
+      <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint);">Average Course GPA</span>
+      <div style="font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--accent); margin: 8px 0 2px;">
+        {{ '%.2f'|format(stats.average_gpa) if stats.average_gpa else 'N/A' }}
       </div>
-      <span style="font-size: 12px; color: var(--ink-soft);">Scale: 4.0</span>
+      <span style="font-size: 12px; color: var(--ink-soft);">Standard 4.0 Scale</span>
     </div>
 
-    <div class="card" style="padding: 20px; text-align: center;">
-      <span class="detail__label">Course Pass Rate</span>
-      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: {% if stats.pass_rate and stats.pass_rate >= 80 %}var(--success){% else %}var(--ink){% endif %}; margin-top: 4px;">
-        {% if stats.pass_rate %}{{ stats.pass_rate }}%{% else %}N/A{% endif %}
+    <div class="card" style="padding: 22px; text-align: center; border-radius: var(--radius-lg);">
+      <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint);">Course Pass Rate</span>
+      <div style="font-family: var(--font-display); font-size: 40px; font-weight: 700; color: {% if stats.pass_rate and stats.pass_rate >= 80 %}var(--success){% elif stats.pass_rate and stats.pass_rate >= 60 %}var(--warning){% else %}var(--danger){% endif %}; margin: 8px 0 2px;">
+        {{ '%.1f'|format(stats.pass_rate) if stats.pass_rate else 'N/A' }}{% if stats.pass_rate %}%{% endif %}
       </div>
-      <span style="font-size: 12px; color: var(--ink-soft);">Grades A - D</span>
+      <span style="font-size: 12px; color: var(--ink-soft);">Grades A through D</span>
     </div>
 
-    <div class="card" style="padding: 20px; text-align: center;">
-      <span class="detail__label">Avg. Weekly Study Hours</span>
-      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--ink); margin-top: 4px;">
+    <div class="card" style="padding: 22px; text-align: center; border-radius: var(--radius-lg);">
+      <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint);">Avg. Weekly Study</span>
+      <div style="font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--teal); margin: 8px 0 2px;">
         {{ stats.average_hours_studied or 'N/A' }}
       </div>
-      <span style="font-size: 12px; color: var(--ink-soft);">Hours per week</span>
+      <span style="font-size: 12px; color: var(--ink-soft);">Self-reported hours/week</span>
     </div>
 
-    <div class="card" style="padding: 20px; text-align: center;">
-      <span class="detail__label">Graded Cohort Size</span>
-      <div style="font-family: var(--font-display); font-size: 36px; font-weight: 600; color: var(--ink); margin-top: 4px;">
+    <div class="card" style="padding: 22px; text-align: center; border-radius: var(--radius-lg);">
+      <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint);">Graded Cohort</span>
+      <div style="font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--ink); margin: 8px 0 2px;">
         {{ stats.total_students }}
       </div>
-      <span style="font-size: 12px; color: var(--ink-soft);">Completed records</span>
+      <span style="font-size: 12px; color: var(--ink-soft);">Validated student records</span>
     </div>
+
   </div>
 
-  <!-- Grade Distribution Breakdown -->
-  <div class="card" style="padding: 28px;">
-    <h2 style="font-size: 20px; color: var(--ink); margin-bottom: 6px;">Letter Grade Distribution (A — F)</h2>
-    <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0 0 20px 0;">Historical distribution of letter marks awarded in this subject.</p>
-
-    {% if stats.grade_distribution %}
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-      {% for item in stats.grade_distribution %}
-      <div>
-        <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px;">
-          <span style="font-weight: 600; color: var(--ink);">Grade {{ item.letter }}</span>
-          <span class="mono" style="color: var(--ink-soft);">{{ item.percentage }}% ({{ item.count }} students)</span>
+  <!-- Charts Layout -->
+  {% if stats.total_students > 0 %}
+  <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 32px;">
+    
+    <!-- Main Interactive Grade Distribution Chart -->
+    <div class="card" style="padding: 28px; border-radius: var(--radius-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px;">
+        <div>
+          <h2 style="font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 4px 0;">Letter Grade Distribution</h2>
+          <p style="font-size: 13.5px; color: var(--ink-soft); margin: 0;">Relative frequency and total student counts per letter category.</p>
         </div>
-        <div style="height: 12px; background: var(--surface); border-radius: 99px; overflow: hidden;">
-          <div style="height: 100%; width: {{ item.percentage }}%; background: {% if item.letter in ['A', 'B'] %}var(--success){% elif item.letter == 'C' %}var(--accent){% elif item.letter == 'D' %}var(--warning){% else %}var(--danger){% endif %};"></div>
-        </div>
+        <span class="mono" style="font-size: 12px; color: var(--ink-faint);">Cohort: n = {{ stats.total_students }}</span>
       </div>
-      {% endfor %}
+
+      <div style="position: relative; height: 280px; width: 100%;">
+        <canvas id="gradeDistributionChart"></canvas>
+      </div>
     </div>
-    {% else %}
-    <p style="color: var(--ink-faint); font-style: italic; margin: 0;">No student grade records available for distribution calculation yet.</p>
-    {% endif %}
+
+  </div>
+  {% else %}
+  <div class="card" style="padding: 48px 24px; text-align: center; border-radius: var(--radius-lg); margin-bottom: 32px;">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--ink-faint); margin-bottom: 12px;">
+      <line x1="18" y1="20" x2="18" y2="10"></line>
+      <line x1="12" y1="20" x2="12" y2="4"></line>
+      <line x1="6" y1="20" x2="6" y2="14"></line>
+    </svg>
+    <h3 style="font-size: 18px; color: var(--ink); margin: 0 0 6px 0;">No Historical Grade Records</h3>
+    <p style="font-size: 14px; color: var(--ink-soft); max-width: 440px; margin: 0 auto;">No student grades have been logged for this course yet. Once students record completed grades, distribution graphs and statistical averages will be generated automatically.</p>
+  </div>
+  {% endif %}
+
+  <!-- Data Table Summary -->
+  <div class="card" style="padding: 24px; border-radius: var(--radius-lg);">
+    <h3 style="font-size: 17px; font-weight: 700; color: var(--ink); margin: 0 0 16px 0;">Tabular Grade Breakdown</h3>
+    
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+      <thead>
+        <tr>
+          <th style="padding: 10px 14px; text-align: left;">Grade</th>
+          <th style="padding: 10px 14px; text-align: left;">Standard Points</th>
+          <th style="padding: 10px 14px; text-align: right;">Student Count</th>
+          <th style="padding: 10px 14px; text-align: right;">Percentage</th>
+          <th style="padding: 10px 14px; text-align: left; width: 35%;">Visual Spread</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set point_map = {'A': '4.00', 'B': '3.00', 'C': '2.00', 'D': '1.00', 'F': '0.00'} %}
+        {% for item in stats.grade_distribution %}
+        <tr>
+          <td style="padding: 12px 14px; font-weight: 700; color: var(--ink);">
+            <span class="chip" style="font-size: 12px; padding: 2px 8px;">Grade {{ item.letter }}</span>
+          </td>
+          <td style="padding: 12px 14px; font-family: var(--font-mono); color: var(--ink-soft);">{{ point_map.get(item.letter, '—') }}</td>
+          <td style="padding: 12px 14px; text-align: right; font-weight: 600; color: var(--ink);">{{ item.count }}</td>
+          <td style="padding: 12px 14px; text-align: right; font-family: var(--font-mono); color: var(--accent);">{{ item.percentage }}%</td>
+          <td style="padding: 12px 14px;">
+            <div style="height: 10px; background: var(--surface); border-radius: 99px; overflow: hidden; border: 1px solid var(--border);">
+              <div style="height: 100%; width: {{ item.percentage }}%; background: {% if item.letter in ['A', 'B'] %}var(--success){% elif item.letter == 'C' %}var(--accent){% elif item.letter == 'D' %}var(--warning){% else %}var(--danger){% endif %};"></div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 
 </div>
+
+<!-- Interactive Chart Initialization with Theme Detection -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  {% if stats.total_students > 0 %}
+  var canvas = document.getElementById('gradeDistributionChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  function getThemeColors() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+      textColor: isDark ? '#ECEFEC' : '#171B18',
+      mutedColor: isDark ? '#A7B0AC' : '#64748b',
+      gridColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+      bars: [
+        isDark ? '#7EBB92' : '#3F6C4E', // A
+        isDark ? '#7FB2C4' : '#2E5F6E', // B
+        isDark ? '#E3AB4C' : '#A8720F', // C
+        isDark ? '#E3C065' : '#93690F', // D
+        isDark ? '#E38F73' : '#A2402A'  // F
+      ]
+    };
+  }
+
+  var labels = {{ stats.grade_distribution | map(attribute='letter') | list | tojson }};
+  var counts = {{ stats.grade_distribution | map(attribute='count') | list | tojson }};
+  var percents = {{ stats.grade_distribution | map(attribute='percentage') | list | tojson }};
+
+  var colors = getThemeColors();
+
+  var chart = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: labels.map(function(l) { return 'Grade ' + l; }),
+      datasets: [{
+        label: 'Students',
+        data: counts,
+        backgroundColor: colors.bars,
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(23, 27, 24, 0.95)',
+          titleFont: { family: "'IBM Plex Sans', sans-serif", weight: '600' },
+          bodyFont: { family: "'IBM Plex Sans', sans-serif" },
+          padding: 12,
+          cornerRadius: 6,
+          callbacks: {
+            label: function(ctx) {
+              var idx = ctx.dataIndex;
+              return counts[idx] + ' students (' + percents[idx] + '% of cohort)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: colors.mutedColor, font: { family: "'IBM Plex Sans', sans-serif", weight: '600' } }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: colors.gridColor },
+          ticks: { stepSize: 1, color: colors.mutedColor, font: { family: "'IBM Plex Mono', monospace" } }
+        }
+      }
+    }
+  });
+
+  // Observe theme toggles to live-update chart styles
+  var observer = new MutationObserver(function() {
+    var c = getThemeColors();
+    chart.data.datasets[0].backgroundColor = c.bars;
+    chart.options.scales.x.ticks.color = c.mutedColor;
+    chart.options.scales.y.ticks.color = c.mutedColor;
+    chart.options.scales.y.grid.color = c.gridColor;
+    chart.update();
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  {% endif %}
+});
+</script>
 {% endblock %}

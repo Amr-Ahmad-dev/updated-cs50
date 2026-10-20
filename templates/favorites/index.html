@@ -338,15 +338,15 @@
           <h3 class="subject-card__title">{{ item.name or ('Subject #' ~ item.entity_id) }}</h3>
 
           <div class="subject-card__footer">
-            {% if item.type == 'material' %}
-              <form action="{{ url_for('material_search') }}" method="POST" class="stretched-link">
-                {# CHANGED: Use item.entity_id #}
-                <input type="hidden" name="material_id" value="{{ item.entity_id }}">
-                <input type="hidden" name="material_name" value="{{ item.name or '' }}">
-                <button type="submit" class="btn btn--outline">View Details</button>
-              </form>
+            {% if item.type == 'material' and item.subject_id %}
+              <a href="{{ url_for('material_detail', subject_id=item.subject_id, material_id=item.entity_id) }}" class="btn btn--outline stretched-link">
+                View Material
+              </a>
+            {% elif item.type == 'professor' %}
+              <a href="{{ url_for('professor_detail', professor_id=item.entity_id) }}" class="btn btn--outline stretched-link">
+                View Professor
+              </a>
             {% else %}
-              {# CHANGED: Use item.entity_id instead of item.id #}
               <a href="{{ url_for('subject_detail', subject_id=item.entity_id) }}" class="btn btn--outline stretched-link">
                 View Details
               </a>

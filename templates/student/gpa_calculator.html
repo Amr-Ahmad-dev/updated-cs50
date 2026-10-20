@@ -1,0 +1,318 @@
+﻿{% extends "layout.html" %}
+{% block title %}GPA Calculator & Academic Ledger{% endblock %}
+{% block main_class %}container{% endblock %}
+
+{% block page_style %}
+<style>
+  .gpa-container {
+    animation: fadeIn 0.4s ease-out forwards;
+    padding-bottom: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .gpa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .gpa-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 6px 0;
+  }
+  .gpa-header p {
+    color: var(--ink-soft);
+    margin: 0;
+    font-size: 15px;
+  }
+
+  /* Metric summary tiles */
+  .gpa-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .gpa-metric-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .gpa-metric-card .val {
+    font-family: var(--font-display);
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 8px 0 4px;
+    color: var(--accent);
+  }
+  .gpa-metric-card .lbl {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+  .gpa-metric-card .sub {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  .gpa-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  @media (min-width: 840px) {
+    .gpa-grid { grid-template-columns: 1fr 1.6fr; }
+  }
+
+  .gpa-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .gpa-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Form */
+  .gpa-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .gpa-form .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .gpa-form label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .gpa-form select,
+  .gpa-form input {
+    padding: 10px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+  }
+
+  /* Semester Table */
+  .semester-block {
+    margin-bottom: 24px;
+  }
+  .semester-block-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .grade-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .grade-table th, .grade-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .grade-table th {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .grade-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .grade-badge--A { background: var(--success-soft); color: var(--success); }
+  .grade-badge--B { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
+  .grade-badge--C { background: var(--warning-soft); color: var(--warning); }
+  .grade-badge--D { background: var(--danger-soft); color: var(--danger); }
+  .grade-badge--F { background: var(--danger-soft); color: var(--danger); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="gpa-container">
+
+  <div class="gpa-header">
+    <div>
+      <h1>Academic GPA Calculator</h1>
+      <p>Log your course marks, view cumulative grade point averages, and project your academic trajectory.</p>
+    </div>
+    <a href="{{ url_for('profile_view') }}" class="btn btn--outline">Profile Overview</a>
+  </div>
+
+  <!-- Metric Badges -->
+  <div class="gpa-metrics">
+    <div class="gpa-metric-card">
+      <div class="lbl">Cumulative GPA</div>
+      <div class="val">{{ '%.2f'|format(grades_data.cumulative_gpa) if grades_data.cumulative_gpa else '0.00' }}</div>
+      <div class="sub">4.0 Scale Standard</div>
+    </div>
+    <div class="gpa-metric-card">
+      <div class="lbl">Earned Credits</div>
+      <div class="val" style="color: var(--ink);">{{ grades_data.total_credits }}</div>
+      <div class="sub">Total Degree Credits</div>
+    </div>
+    <div class="gpa-metric-card">
+      <div class="lbl">Courses Recorded</div>
+      <div class="val" style="color: var(--teal);">{{ grades_data.grades|length }}</div>
+      <div class="sub">Completed Curriculum Units</div>
+    </div>
+  </div>
+
+  <div class="gpa-grid">
+
+    <!-- Add/Update Grade Form -->
+    <div class="gpa-card">
+      <h3>Record Subject Grade</h3>
+      <form action="{{ url_for('gpa_calculator') }}" method="POST" class="gpa-form">
+        
+        <div class="field">
+          <label for="subject_id">Subject *</label>
+          <select name="subject_id" id="subject_id" required>
+            <option value="" disabled selected>Select a subject...</option>
+            {% for s in subjects %}
+              <option value="{{ s.id }}">{{ s.code }} — {{ s.name }} ({{ s.credits }} cr)</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="field">
+            <label for="year">Year *</label>
+            <select name="year" id="year" required>
+              <option value="1">Year 1</option>
+              <option value="2">Year 2</option>
+              <option value="3">Year 3</option>
+              <option value="4">Year 4</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="semester">Semester *</label>
+            <select name="semester" id="semester" required>
+              <option value="1">Semester 1</option>
+              <option value="2">Semester 2</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="field">
+            <label for="grade">Grade Points (0.0 - 4.0) *</label>
+            <input type="number" name="grade" id="grade" min="0" max="4.0" step="0.01" placeholder="e.g. 3.70" required>
+          </div>
+          <div class="field">
+            <label for="letter">Letter Grade</label>
+            <select name="letter" id="letter">
+              <option value="">Auto from points</option>
+              <option value="A">A (4.0)</option>
+              <option value="B">B (3.0)</option>
+              <option value="C">C (2.0)</option>
+              <option value="D">D (1.0)</option>
+              <option value="F">F (0.0)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="hours_studied">Weekly Study Hours</label>
+          <input type="number" name="hours_studied" id="hours_studied" min="0" step="0.5" placeholder="e.g. 7.5">
+        </div>
+
+        <button type="submit" class="btn btn--primary" style="margin-top: 8px;">Save Grade Record</button>
+      </form>
+    </div>
+
+    <!-- Course Grades by Semester -->
+    <div class="gpa-card">
+      <h3>Course History &amp; Breakdown</h3>
+
+      {% if grades_data.semesters %}
+        {% for sem_title, sem in grades_data.semesters.items() %}
+        <div class="semester-block">
+          <div class="semester-block-head">
+            <span>{{ sem_title }}</span>
+            <span style="font-family: var(--font-mono); color: var(--accent);">Term GPA: {{ '%.2f'|format(sem.gpa) }}</span>
+          </div>
+
+          <table class="grade-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Subject</th>
+                <th>Credits</th>
+                <th>Grade</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in sem.courses %}
+              <tr>
+                <td style="font-family: var(--font-mono); font-weight: 600;">{{ c.subject_code }}</td>
+                <td>{{ c.subject_name }}</td>
+                <td>{{ c.credits }}</td>
+                <td>
+                  <span class="grade-badge grade-badge--{{ c.letter or 'A' }}">{{ c.letter or 'A' }} ({{ '%.2f'|format(c.grade) }})</span>
+                </td>
+                <td style="text-align: right;">
+                  <form action="{{ url_for('gpa_delete_grade', grade_id=c.id) }}" method="POST" onsubmit="return confirm('Remove this course grade record?');" style="display:inline;">
+                    <button type="submit" class="btn btn--ghost" style="padding: 4px 8px; font-size: 11px; color: var(--danger);">Remove</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="padding: 40px 20px; text-align: center; color: var(--ink-soft); background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border);">
+          <p style="margin: 0;">No course grades entered yet. Use the form on the left to add your first subject grade.</p>
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
